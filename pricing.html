@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — Vivire Automations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green:     #8FDA0D;
+      --cyan:      #2EDDB5;
+      --teal:      #0B8080;
+      --deep-teal: #0B3B3B;
+      --bg:        #060E0E;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); font-family: 'Roboto', sans-serif; color: #e8f5f5; overflow-x: hidden; }
+    h1, h2, h3, h4, h5 { font-family: 'Montserrat', sans-serif; }
+
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999; opacity: 0.45;
+    }
+
+    .grad-text {
+      background: linear-gradient(110deg, #8FDA0D 0%, #2EDDB5 55%, #1ABFA6 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(130deg, #8FDA0D 0%, #2EDDB5 55%, #0B8080 100%);
+      font-family: 'Montserrat', sans-serif; font-weight: 700; color: #060E0E;
+      border-radius: 999px; letter-spacing: 0.03em; text-decoration: none; cursor: pointer; border: none;
+      box-shadow: 0 4px 24px rgba(46,221,181,0.28), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease;
+    }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 40px rgba(46,221,181,0.42); }
+    .btn-primary:active { transform: translateY(0) scale(0.985); }
+
+    .btn-ghost {
+      display: inline-block; text-decoration: none;
+      border: 1.5px solid rgba(46,221,181,0.4); color: #2EDDB5; border-radius: 999px;
+      font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: 0.02em;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease;
+    }
+    .btn-ghost:hover { background: rgba(46,221,181,0.08); border-color: rgba(46,221,181,0.75); transform: translateY(-2px); }
+
+    /* Nav */
+    .nav-wrap {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(6,14,14,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(46,221,181,0.08);
+    }
+    .nav-link {
+      font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 0.82rem;
+      letter-spacing: 0.06em; text-transform: uppercase; color: rgba(232,245,245,0.6);
+      text-decoration: none; transition: color 0.2s ease;
+    }
+    .nav-link:hover { color: #2EDDB5; }
+    .nav-link.active { color: #2EDDB5; }
+
+    /* Resources dropdown */
+    .res-wrap { position: relative; }
+    .res-trigger { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+    .res-trigger svg { transition: transform 0.22s ease; }
+    .res-wrap:hover .res-trigger svg, .res-wrap:focus-within .res-trigger svg { transform: rotate(180deg); }
+    .res-dropdown {
+      position: absolute; top: calc(100% + 16px); right: -20px; width: 620px;
+      background: rgba(5,12,12,0.98); border: 1px solid rgba(46,221,181,0.13); border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.75); backdrop-filter: blur(28px);
+      padding: 1.75rem; display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 1.5rem;
+      opacity: 0; pointer-events: none; visibility: hidden; transform: translateY(-10px);
+      transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1), visibility 0.22s; z-index: 500;
+    }
+    .res-wrap:hover .res-dropdown, .res-wrap:focus-within .res-dropdown { opacity: 1; pointer-events: all; visibility: visible; transform: translateY(0); }
+    .res-col-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(46,221,181,0.5); margin-bottom: 1rem; display: block; }
+    .res-link { display: flex; align-items: center; gap: 10px; padding: 0.55rem 0.6rem; border-radius: 10px; text-decoration: none; margin-bottom: 2px; transition: background 0.18s ease; }
+    .res-link:hover { background: rgba(46,221,181,0.07); }
+    .res-link-icon { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(46,221,181,0.07); border: 1px solid rgba(46,221,181,0.1); }
+    .res-link-text { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; color: rgba(232,245,245,0.8); }
+    .res-link:hover .res-link-text { color: #2EDDB5; }
+    .res-featured-card { border-radius: 12px; overflow: hidden; text-decoration: none; display: block; background: rgba(11,56,56,0.3); border: 1px solid rgba(46,221,181,0.1); margin-bottom: 0.6rem; transition: border-color 0.2s ease, transform 0.2s ease; }
+    .res-featured-card:hover { border-color: rgba(46,221,181,0.28); transform: translateY(-2px); }
+    .res-featured-card img { width: 100%; height: 72px; object-fit: cover; display: block; filter: brightness(0.8); }
+    .res-featured-card-body { padding: 0.6rem 0.75rem; }
+    .res-featured-card-title { font-family: 'Montserrat', sans-serif; font-size: 0.73rem; font-weight: 700; color: #e8f5f5; line-height: 1.35; }
+
+    .section-label { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #8FDA0D; margin-bottom: 1rem; }
+
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    @keyframes pulse-orb { 0%,100%{opacity:.35;transform:scale(1)} 50%{opacity:.7;transform:scale(1.06)} }
+    @keyframes logo-glow-pulse {
+      0%,100%{filter:drop-shadow(0 0 6px rgba(46,221,181,.4)) drop-shadow(0 0 3px rgba(143,218,13,.22))}
+      50%{filter:drop-shadow(0 0 22px rgba(46,221,181,.75)) drop-shadow(0 0 10px rgba(143,218,13,.45))}
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    .logo-mark { animation: logo-glow-pulse 3.5s ease-in-out infinite; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+    .logo-mark:hover { transform: scale(1.14) rotate(5deg); }
+    .anim-1 { animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.05s both; }
+    .anim-2 { animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s both; }
+    .anim-3 { animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.35s both; }
+
+    /* Pricing cards */
+    .pricing-card {
+      border-radius: 24px;
+      border: 1px solid rgba(46,221,181,0.1);
+      background: rgba(11,56,56,0.15);
+      padding: 2.5rem 2rem;
+      display: flex; flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+    }
+    .pricing-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4), 0 0 32px rgba(46,221,181,0.06);
+      border-color: rgba(46,221,181,0.22);
+    }
+    .pricing-card.featured {
+      border: 2px solid rgba(46,221,181,0.5);
+      background: linear-gradient(145deg, rgba(46,221,181,0.08) 0%, rgba(11,56,56,0.25) 100%);
+      box-shadow: 0 8px 48px rgba(46,221,181,0.12), 0 0 0 1px rgba(46,221,181,0.1);
+    }
+    .pricing-card.featured:hover {
+      box-shadow: 0 24px 72px rgba(46,221,181,0.18), 0 0 0 1px rgba(46,221,181,0.2);
+      border-color: rgba(46,221,181,0.7);
+    }
+
+    .featured-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #8FDA0D, #2EDDB5);
+      color: #060E0E; font-family: 'Montserrat', sans-serif; font-weight: 700;
+      font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 4px 16px; border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(46,221,181,0.3);
+    }
+
+    .price-setup {
+      font-family: 'Montserrat', sans-serif; font-weight: 900;
+      font-size: 2.6rem; letter-spacing: -0.04em; line-height: 1;
+      color: #fff;
+    }
+
+    .price-retainer {
+      font-family: 'Montserrat', sans-serif; font-weight: 600;
+      font-size: 0.9rem; color: rgba(232,245,245,0.5); margin-top: 0.3rem;
+    }
+
+    .price-retainer span { color: var(--cyan); font-weight: 700; }
+
+    .include-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      font-size: 0.875rem; line-height: 1.6; color: rgba(232,245,245,0.65);
+      margin-bottom: 0.7rem;
+    }
+    .include-item svg { flex-shrink: 0; margin-top: 2px; }
+
+    /* Table */
+    .alacarte-table {
+      width: 100%; border-collapse: collapse;
+    }
+    .alacarte-table th {
+      font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(46,221,181,0.6); padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(46,221,181,0.1); text-align: left;
+    }
+    .alacarte-table td {
+      padding: 0.9rem 1rem; font-size: 0.875rem; color: rgba(232,245,245,0.7);
+      border-bottom: 1px solid rgba(46,221,181,0.06);
+    }
+    .alacarte-table tr:last-child td { border-bottom: none; }
+    .alacarte-table tr:hover td { background: rgba(46,221,181,0.03); }
+    .alacarte-table td:first-child { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #e8f5f5; }
+
+    .price-tag {
+      font-family: 'Montserrat', sans-serif; font-weight: 700;
+      color: var(--cyan); font-size: 0.9rem;
+    }
+
+    /* FAQ */
+    .faq-item {
+      border-bottom: 1px solid rgba(46,221,181,0.08);
+      padding: 1.5rem 0;
+    }
+    .faq-q {
+      font-family: 'Montserrat', sans-serif; font-weight: 700;
+      font-size: 0.95rem; color: #e8f5f5; margin-bottom: 0.75rem;
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer;
+    }
+    .faq-a {
+      font-size: 0.9rem; line-height: 1.8; color: rgba(232,245,245,0.5);
+    }
+
+    #mobile-nav { display: none; }
+    #mobile-nav.open { display: flex; }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav-wrap">
+  <div style="max-width:1280px; margin:0 auto; padding:0 1.5rem;">
+    <nav style="display:flex; align-items:center; justify-content:space-between; height:70px;">
+      <a href="index.html" style="display:flex; align-items:center; gap:4px; text-decoration:none;">
+        <img src="brand_assets/Untitled design (17).png" alt="Vivire logo" class="logo-mark" style="width:54px; height:54px; object-fit:contain;">
+        <p style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:1.1rem; letter-spacing:0.2em; color:#fff; text-transform:uppercase; line-height:1;">VIVIRE</p>
+      </a>
+      <div style="display:flex; align-items:center; gap:2.5rem;" class="hidden md:flex">
+        <a href="index.html#services" class="nav-link">Services</a>
+        <a href="index.html#how"      class="nav-link">How It Works</a>
+        <a href="index.html#results"  class="nav-link">Results</a>
+        <a href="pricing.html"        class="nav-link active">Pricing</a>
+        <div class="res-wrap">
+          <button class="nav-link res-trigger" style="background:none; border:none; padding:0; cursor:pointer; display:flex; align-items:center; gap:5px;">
+            Resources
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 4 6 8 10 4"/></svg>
+          </button>
+          <div class="res-dropdown">
+            <div>
+              <span class="res-col-label">Vivire</span>
+              <a href="about.html" class="res-link"><div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span class="res-link-text" style="color:#2EDDB5;">About</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><span class="res-link-text">Blog</span></a>
+              <a href="index.html#results" class="res-link"><div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="res-link-text">Case Studies</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8L2 7h20z"/></svg></div><span class="res-link-text">Careers</span></a>
+            </div>
+            <div>
+              <span class="res-col-label">Explore</span>
+              <a href="contact.html" class="res-link"><div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><span class="res-link-text" style="color:rgba(232,245,245,0.8);">Contact Us</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><span class="res-link-text" style="color:rgba(232,245,245,0.8);">Guides</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><span class="res-link-text" style="color:rgba(232,245,245,0.8);">Events</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><span class="res-link-text" style="color:rgba(232,245,245,0.8);">Documentation</span></a>
+            </div>
+            <div>
+              <span class="res-col-label">Featured Insight</span>
+              <a href="#" class="res-featured-card"><img src="https://placehold.co/300x72/0B3B3B/2EDDB5?text=Automation+Trends" alt=""><div class="res-featured-card-body"><p class="res-featured-card-title">5 AI Workflows Every Business Should Automate in 2026</p><p style="font-family:'Roboto',sans-serif; font-size:0.67rem; color:rgba(232,245,245,0.35); margin-top:4px;">3 min read</p></div></a>
+              <a href="#" class="res-featured-card"><img src="https://placehold.co/300x72/071A10/8FDA0D?text=Cost+Savings" alt=""><div class="res-featured-card-body"><p class="res-featured-card-title">How Automation Cut Operational Costs by 60% for SMBs</p><p style="font-family:'Roboto',sans-serif; font-size:0.67rem; color:rgba(232,245,245,0.35); margin-top:4px;">5 min read</p></div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hidden md:flex" style="align-items:center; gap:0.875rem;">
+        <a href="contact.html" class="btn-ghost" style="padding:0.6rem 1.4rem; font-size:0.8rem;">Log In</a>
+        <a href="contact.html" class="btn-primary" style="padding:0.65rem 1.5rem; font-size:0.82rem;">Book a Demo</a>
+      </div>
+      <button id="hamburger" class="md:hidden" aria-label="Open menu" style="background:none; border:none; cursor:pointer; padding:6px; color:rgba(232,245,245,0.7);" onclick="document.getElementById('mobile-nav').classList.toggle('open')">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="5" x2="20" y2="5"/><line x1="2" y1="11" x2="20" y2="11"/><line x1="2" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </nav>
+    <div id="mobile-nav" style="flex-direction:column; gap:0; padding-bottom:1.25rem; border-top:1px solid rgba(46,221,181,0.1);">
+      <a href="index.html#services" class="nav-link" style="display:block; padding:0.8rem 0.25rem;">Services</a>
+      <a href="index.html#how"      class="nav-link" style="display:block; padding:0.8rem 0.25rem;">How It Works</a>
+      <a href="index.html#results"  class="nav-link" style="display:block; padding:0.8rem 0.25rem;">Results</a>
+      <a href="pricing.html"        class="nav-link" style="display:block; padding:0.8rem 0.25rem; color:#2EDDB5;">Pricing</a>
+      <a href="about.html"          class="nav-link" style="display:block; padding:0.8rem 0.25rem;">About</a>
+      <a href="contact.html" class="btn-primary" style="display:block; text-align:center; padding:0.9rem 1.5rem; font-size:0.875rem; margin-top:0.75rem;">Book a Demo</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══ HERO ══ -->
+<section style="min-height:60vh; display:flex; align-items:center; padding:9rem 1.5rem 5rem; position:relative; overflow:hidden; text-align:center;
+  background-color:#060E0E;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(46,221,181,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 15% 80%, rgba(143,218,13,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 45% at 85% 70%, rgba(11,59,59,0.5) 0%, transparent 70%);">
+
+  <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:700px; border-radius:50%; border:1px dashed rgba(46,221,181,0.06); animation:spin-slow 80s linear infinite; pointer-events:none;"></div>
+
+  <div style="max-width:760px; margin:0 auto; position:relative; z-index:2;">
+    <span class="section-label anim-1">Simple, Transparent Pricing</span>
+    <h1 class="anim-2" style="font-size:clamp(2.6rem,6vw,4.2rem); font-weight:900; letter-spacing:-0.04em; line-height:1.05; color:#fff; margin-bottom:1.5rem;">
+      No hidden fees.<br><span class="grad-text">No enterprise nonsense.</span>
+    </h1>
+    <p class="anim-3" style="font-size:1.05rem; line-height:1.85; color:rgba(232,245,245,0.5); max-width:560px; margin:0 auto 2rem;">
+      Every package includes a one-time setup fee to build and deploy your automations, plus a monthly retainer to keep everything running, optimised, and scaling with your business.
+    </p>
+
+    <!-- Toggle label -->
+    <div class="anim-3" style="display:inline-flex; align-items:center; gap:0.6rem; background:rgba(46,221,181,0.07); border:1px solid rgba(46,221,181,0.15); border-radius:999px; padding:0.4rem 1.1rem;">
+      <span style="width:8px; height:8px; border-radius:50%; background:var(--green); display:inline-block;"></span>
+      <span style="font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:700; color:rgba(232,245,245,0.6); letter-spacing:0.1em; text-transform:uppercase;">Setup + Monthly Retainer Model</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ PACKAGES ══ -->
+<section style="padding:5rem 1.5rem 6rem; background:#060E0E;">
+  <div style="max-width:1180px; margin:0 auto;">
+
+    <div style="display:grid; grid-template-columns:1fr; gap:1.5rem; align-items:start;" class="lg:grid-cols-3">
+
+      <!-- STARTER -->
+      <div class="pricing-card">
+        <div style="margin-bottom:1.5rem;">
+          <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(143,218,13,0.08); border:1px solid rgba(143,218,13,0.18); border-radius:999px; padding:4px 12px; margin-bottom:1rem;">
+            <span style="font-family:'Montserrat',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#8FDA0D;">Starter</span>
+          </div>
+          <p style="font-size:0.85rem; color:rgba(232,245,245,0.45); line-height:1.6; margin-bottom:1.5rem;">Best for solopreneurs and new businesses getting their first automations live.</p>
+          <div class="price-setup">$2,500</div>
+          <div style="font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:600; color:rgba(232,245,245,0.35); margin-top:2px; margin-bottom:0.4rem;">one-time setup</div>
+          <div class="price-retainer">then <span>$750 / month</span></div>
+        </div>
+
+        <div style="height:1px; background:rgba(46,221,181,0.08); margin-bottom:1.5rem;"></div>
+
+        <p style="font-family:'Montserrat',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(232,245,245,0.35); margin-bottom:1rem;">Includes</p>
+
+        <div style="flex:1; margin-bottom:2rem;">
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">AI Workflow Automation</strong> — custom multi-step pipelines connecting your tool stack</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">CRM & Lead Automation</strong> — lead capture, nurturing sequences, and pipeline hygiene</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Monthly performance monitoring & optimisation</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Email support with 48-hour response time</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Up to 2 revision rounds post-launch</span>
+          </div>
+        </div>
+
+        <a href="contact.html" class="btn-ghost" style="width:100%; text-align:center; padding:0.85rem 1.5rem; font-size:0.85rem;">Get Started</a>
+      </div>
+
+      <!-- GROWTH (FEATURED) -->
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+
+        <div style="margin-bottom:1.5rem;">
+          <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(46,221,181,0.1); border:1px solid rgba(46,221,181,0.25); border-radius:999px; padding:4px 12px; margin-bottom:1rem;">
+            <span style="font-family:'Montserrat',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#2EDDB5;">Growth</span>
+          </div>
+          <p style="font-size:0.85rem; color:rgba(232,245,245,0.45); line-height:1.6; margin-bottom:1.5rem;">For SMBs actively scaling who need multiple systems working together seamlessly.</p>
+          <div class="price-setup" style="background:linear-gradient(110deg,#2EDDB5,#8FDA0D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">$5,500</div>
+          <div style="font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:600; color:rgba(232,245,245,0.35); margin-top:2px; margin-bottom:0.4rem;">one-time setup</div>
+          <div class="price-retainer">then <span>$1,500 / month</span></div>
+        </div>
+
+        <div style="height:1px; background:rgba(46,221,181,0.15); margin-bottom:1.5rem;"></div>
+
+        <p style="font-family:'Montserrat',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(232,245,245,0.35); margin-bottom:1rem;">Includes</p>
+
+        <div style="flex:1; margin-bottom:2rem;">
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">AI Workflow Automation</strong> — everything in Starter</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">AI Chatbots & Voice Agents</strong> — 24/7 customer support, lead qualification & booking</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">CRM & Lead Automation</strong> — full pipeline and nurturing system</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">Social Media & Content AI</strong> — automated content generation and scheduling</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Priority support with 24-hour response time</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Monthly strategy call + performance report</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Up to 4 revision rounds post-launch</span>
+          </div>
+        </div>
+
+        <a href="contact.html" class="btn-primary" style="width:100%; text-align:center; padding:0.9rem 1.5rem; font-size:0.875rem;">Get Started</a>
+      </div>
+
+      <!-- SCALE -->
+      <div class="pricing-card">
+        <div style="margin-bottom:1.5rem;">
+          <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(11,128,128,0.1); border:1px solid rgba(11,128,128,0.25); border-radius:999px; padding:4px 12px; margin-bottom:1rem;">
+            <span style="font-family:'Montserrat',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#1ABFA6;">Scale</span>
+          </div>
+          <p style="font-size:0.85rem; color:rgba(232,245,245,0.45); line-height:1.6; margin-bottom:1.5rem;">Full-stack automation across every layer of your business. Built to run without you.</p>
+          <div class="price-setup">$10,000</div>
+          <div style="font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:600; color:rgba(232,245,245,0.35); margin-top:2px; margin-bottom:0.4rem;">one-time setup</div>
+          <div class="price-retainer">then <span style="color:#1ABFA6;">$3,000 / month</span></div>
+        </div>
+
+        <div style="height:1px; background:rgba(46,221,181,0.08); margin-bottom:1.5rem;"></div>
+
+        <p style="font-family:'Montserrat',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(232,245,245,0.35); margin-bottom:1rem;">Includes</p>
+
+        <div style="flex:1; margin-bottom:2rem;">
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1ABFA6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">All 6 Services</strong> — complete automation across every layer of your business</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1ABFA6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">Custom AI Integrations</strong> — bespoke GPT-powered tools built for your industry</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1ABFA6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong style="color:#e8f5f5;">Operations & Back-Office</strong> — invoicing, reporting, and data sync automation</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1ABFA6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Dedicated account manager</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1ABFA6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Same-day priority support</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1ABFA6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Bi-weekly strategy calls + full analytics dashboard</span>
+          </div>
+          <div class="include-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1ABFA6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Unlimited revision rounds</span>
+          </div>
+        </div>
+
+        <a href="contact.html" class="btn-ghost" style="width:100%; text-align:center; padding:0.85rem 1.5rem; font-size:0.85rem; border-color:rgba(26,191,166,0.4); color:#1ABFA6;">Get Started</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ À LA CARTE ══ -->
+<section style="padding:4rem 1.5rem 6rem; background:#07110F;">
+  <div style="max-width:900px; margin:0 auto;">
+    <div style="text-align:center; margin-bottom:3rem;">
+      <span class="section-label">Flexible Options</span>
+      <h2 style="font-size:clamp(1.8rem,4vw,2.6rem); font-weight:800; letter-spacing:-0.03em; line-height:1.15;">
+        Prefer to start with <span class="grad-text">one service?</span>
+      </h2>
+      <p style="font-size:0.95rem; line-height:1.8; color:rgba(232,245,245,0.45); max-width:500px; margin:1rem auto 0;">
+        Every service is also available individually. Mix and match as your business grows.
+      </p>
+    </div>
+
+    <div style="background:rgba(11,56,56,0.18); border:1px solid rgba(46,221,181,0.1); border-radius:20px; overflow:hidden;">
+      <table class="alacarte-table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Setup Fee</th>
+            <th>Monthly Retainer</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AI Workflow Automation</td>
+            <td><span class="price-tag">$1,500</span></td>
+            <td><span class="price-tag">$600 / mo</span></td>
+            <td style="color:rgba(232,245,245,0.45); font-size:0.82rem;">Businesses with repetitive manual tasks</td>
+          </tr>
+          <tr>
+            <td>AI Chatbots & Voice Agents</td>
+            <td><span class="price-tag">$2,500</span></td>
+            <td><span class="price-tag">$800 / mo</span></td>
+            <td style="color:rgba(232,245,245,0.45); font-size:0.82rem;">Customer support & lead qualification</td>
+          </tr>
+          <tr>
+            <td>CRM & Lead Automation</td>
+            <td><span class="price-tag">$1,500</span></td>
+            <td><span class="price-tag">$600 / mo</span></td>
+            <td style="color:rgba(232,245,245,0.45); font-size:0.82rem;">Sales teams and growing pipelines</td>
+          </tr>
+          <tr>
+            <td>Social Media & Content AI</td>
+            <td><span class="price-tag">$1,000</span></td>
+            <td><span class="price-tag">$500 / mo</span></td>
+            <td style="color:rgba(232,245,245,0.45); font-size:0.82rem;">Brands needing consistent content output</td>
+          </tr>
+          <tr>
+            <td>Operations & Back-Office</td>
+            <td><span class="price-tag">$1,500</span></td>
+            <td><span class="price-tag">$600 / mo</span></td>
+            <td style="color:rgba(232,245,245,0.45); font-size:0.82rem;">Invoicing, reporting & internal workflows</td>
+          </tr>
+          <tr>
+            <td>Custom AI Integrations</td>
+            <td><span class="price-tag">$3,500</span></td>
+            <td><span class="price-tag">$1,000 / mo</span></td>
+            <td style="color:rgba(232,245,245,0.45); font-size:0.82rem;">Bespoke GPT tools and AI decision engines</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FAQ ══ -->
+<section style="padding:4rem 1.5rem 6rem; background:#060E0E;">
+  <div style="max-width:700px; margin:0 auto;">
+    <div style="text-align:center; margin-bottom:3rem;">
+      <span class="section-label">FAQ</span>
+      <h2 style="font-size:clamp(1.8rem,4vw,2.6rem); font-weight:800; letter-spacing:-0.03em; line-height:1.15;">
+        Common <span class="grad-text">questions</span>
+      </h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What does the setup fee cover?</div>
+      <div class="faq-a">The setup fee covers everything needed to get your automations live — discovery sessions, building and configuring each workflow, connecting your tools and platforms, testing, and the official launch. It's a one-time charge paid at the start of the project.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What does the monthly retainer cover?</div>
+      <div class="faq-a">The monthly retainer covers ongoing maintenance, monitoring, bug fixes when tools update, performance optimisation, and support. As your business grows and changes, we update your automations to keep up — you're never left maintaining them yourself.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I upgrade my package later?</div>
+      <div class="faq-a">Yes. You can start on Starter and upgrade to Growth or Scale at any time. You'll only pay the difference in setup cost for the additional services added, plus the new monthly rate going forward.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How long does setup take?</div>
+      <div class="faq-a">Starter packages typically go live within 1–2 weeks. Growth packages take 2–3 weeks. Scale packages take 3–5 weeks depending on the complexity of your existing systems and integrations.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do you offer custom quotes?</div>
+      <div class="faq-a">Absolutely. If your needs don't fit neatly into one of the packages, book a free strategy call and we'll put together a custom proposal tailored exactly to your business, budget, and goals.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ CTA ══ -->
+<section style="padding:6rem 1.5rem; text-align:center; background:linear-gradient(180deg,#060E0E 0%,#071510 100%); position:relative; overflow:hidden;">
+  <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:400px; background:radial-gradient(ellipse, rgba(46,221,181,0.07) 0%, transparent 65%); pointer-events:none;"></div>
+  <div style="max-width:620px; margin:0 auto; position:relative; z-index:1;">
+    <span class="section-label">Not Sure Where to Start?</span>
+    <h2 style="font-size:clamp(2rem,5vw,3rem); font-weight:800; letter-spacing:-0.03em; line-height:1.15; margin-bottom:1.5rem;">
+      Book a free strategy call.<br><span class="grad-text">We'll figure it out together.</span>
+    </h2>
+    <p style="font-size:1rem; line-height:1.8; color:rgba(232,245,245,0.48); max-width:480px; margin:0 auto 2.5rem;">
+      Tell us about your business and we'll recommend the right package — or build a custom plan that fits your exact needs and budget.
+    </p>
+    <a href="contact.html" class="btn-primary" style="padding:1.05rem 2.75rem; font-size:1rem;">Book a Free Strategy Call</a>
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ══ -->
+<footer style="background:#030909; border-top:1px solid rgba(46,221,181,0.07); padding:3rem 1.5rem 2rem;">
+  <div style="max-width:1280px; margin:0 auto; display:flex; flex-direction:column; align-items:center; gap:1.5rem; text-align:center;">
+    <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none;">
+      <img src="brand_assets/Untitled design (17).png" alt="" class="logo-mark" style="width:36px; height:36px; object-fit:contain;">
+      <p style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:0.95rem; letter-spacing:0.2em; color:#fff; text-transform:uppercase;">VIVIRE</p>
+    </a>
+    <div style="height:1px; width:100%; background:linear-gradient(90deg, transparent, rgba(46,221,181,0.15), transparent);"></div>
+    <p style="font-size:0.75rem; color:rgba(232,245,245,0.25); font-family:'Roboto',sans-serif;">© 2026 Vivire Automations. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  (function (d, t) {
+    var g = document.createElement(t), s = d.getElementsByTagName(t)[0];
+    g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+    g.defer = true; g.async = true;
+    s.parentNode.insertBefore(g, s);
+    g.onload = function () {
+      window.vapiSDK.run({
+        apiKey: "5b7a1d64-2061-487a-99ce-d8c600ede18b",
+        assistant: "b06c6629-6896-4ed9-a880-0269f3d96f67",
+        config: {
+          position: "bottom-right",
+          offset: "24px",
+          idle:    { color: "#2EDDB5", type: "pill", title: "Talk to Vivi",   subtitle: "AI Assistant",   icon: "https://unpkg.com/lucide-static@0.321.0/icons/mic.svg" },
+          loading: { color: "#8FDA0D", type: "pill", title: "Connecting...",  subtitle: "Please wait",    icon: "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg" },
+          active:  { color: "#ef4444", type: "pill", title: "End Call",       subtitle: "Tap to hang up", icon: "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg" }
+        }
+      });
+    };
+  })(document, "script");
+</script>
+
+</body>
+</html>

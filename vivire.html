@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vivire — Clarity for better decision-making</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black:      #040A0A;
+      --white:      #ffffff;
+      --green:      #BFD400;
+      --cyan:       #22E3C6;
+      --teal:       #0B8080;
+      --deep-teal:  #0B3B3B;
+      --green-light: #d4eb3a;
+      --cyan-light:  #7af5e2;
+      --neutral:    #7a9a9a;
+      --dark-200:   #060F0F;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: 'Roboto', Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      letter-spacing: 0.3px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', Arial, sans-serif; }
+
+    /* Grain texture overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.3;
+    }
+
+    /* Brand text helpers */
+    .text-green   { color: var(--green); }
+    .text-cyan    { color: var(--cyan); }
+    .text-teal    { color: var(--teal); }
+    .text-neutral { color: var(--neutral); }
+
+    /* Signature gradient — Life Green → Cyan Flow → Deep Teal */
+    .grad-green {
+      background: linear-gradient(135deg, #BFD400 0%, #22E3C6 60%, #0FFFF8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Cyan → Teal gradient */
+    .grad-purple {
+      background: linear-gradient(135deg, #22E3C6 0%, #0B8080 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(4,10,10,0.90);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(191,212,0,0.12);
+    }
+
+    .nav-logo {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      width: 32px; height: 32px; object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+
+    .btn-nav-ghost {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem; font-weight: 500;
+      text-decoration: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: border-color 0.2s ease, color 0.2s ease;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .btn-nav-ghost:hover { border-color: rgba(191,212,0,0.5); color: var(--green); }
+
+    .btn-nav-primary {
+      background: linear-gradient(130deg, #BFD400 0%, #22E3C6 55%, #0FFFF8 100%);
+      color: #040A0A;
+      font-size: 0.9rem; font-weight: 700;
+      text-decoration: none;
+      padding: 0.5rem 1.4rem;
+      border-radius: 999px;
+      border: none;
+      font-family: 'Montserrat', Arial, sans-serif;
+      transition: opacity 0.2s ease, transform 0.15s ease;
+    }
+    .btn-nav-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-nav-primary:active { transform: translateY(0); }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 8rem 2rem 5rem;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Radial glow background */
+    .hero-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 15%, rgba(191,212,0,0.2) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 40% at 75% 60%, rgba(34,227,198,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 45% at 25% 70%, rgba(11,128,128,0.12) 0%, transparent 60%);
+    }
+
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: 860px; margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(191,212,0,0.1);
+      border: 1px solid rgba(191,212,0,0.3);
+      border-radius: 999px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--green-light);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    .hero-ctas {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1rem; flex-wrap: wrap;
+      margin-bottom: 4rem;
+    }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: linear-gradient(130deg, #BFD400 0%, #22E3C6 55%, #0FFFF8 100%);
+      color: #040A0A;
+      font-size: 0.95rem; font-weight: 700;
+      text-decoration: none;
+      padding: 0.8rem 2rem;
+      border-radius: 999px;
+      border: none; cursor: pointer;
+      font-family: 'Montserrat', Arial, sans-serif;
+      transition: opacity 0.2s ease, transform 0.15s ease,
+                  box-shadow 0.2s ease;
+      box-shadow: 0 4px 24px rgba(191,212,0,0.3);
+    }
+    .btn-primary:hover {
+      opacity: 0.9; transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(34,227,198,0.4);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent;
+      color: rgba(255,255,255,0.85);
+      font-size: 0.95rem; font-weight: 600;
+      text-decoration: none;
+      padding: 0.8rem 2rem;
+      border-radius: 999px;
+      border: 1px solid rgba(34,227,198,0.3);
+      cursor: pointer;
+      font-family: 'Montserrat', Arial, sans-serif;
+      transition: border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(34,227,198,0.7);
+      color: var(--cyan); transform: translateY(-1px);
+    }
+    .btn-ghost:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+    /* Hero mockup */
+    .hero-mockup {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-mockup-inner {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(191,212,0,0.2);
+      box-shadow:
+        0 0 0 1px rgba(34,227,198,0.08),
+        0 32px 80px rgba(6,14,14,0.95),
+        0 0 120px rgba(191,212,0,0.12);
+      position: relative;
+    }
+
+    .hero-mockup-inner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(6,14,14,0.7) 100%);
+      z-index: 1; pointer-events: none;
+    }
+
+    .hero-mockup img {
+      display: block; width: 100%; height: auto;
+    }
+
+    /* Trusted by */
+    .logos-section {
+      padding: 3rem 2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+
+    .logos-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--neutral);
+      margin-bottom: 2rem;
+    }
+
+    .logos-row {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 3rem;
+    }
+
+    .logo-item {
+      font-size: 0.9rem; font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+    .logo-item:hover { color: rgba(255,255,255,0.6); }
+
+    /* Sections */
+    .section {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.25rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block; width: 18px; height: 2px;
+      background: linear-gradient(90deg, #BFD400, #22E3C6);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      max-width: 500px;
+    }
+
+    /* Feature cards grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(34,227,198,0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: border-color 0.25s ease, transform 0.2s ease,
+                  box-shadow 0.25s ease;
+      position: relative; overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(191,212,0,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card:hover {
+      border-color: rgba(34,227,198,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(6,14,14,0.8), 0 0 0 1px rgba(191,212,0,0.1);
+    }
+
+    .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(191,212,0,0.1);
+      border: 1px solid rgba(191,212,0,0.2);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-icon svg { width: 22px; height: 22px; color: var(--green); }
+
+    .card h3 {
+      font-size: 1.05rem; font-weight: 700;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+    }
+
+    /* Feature rows (alternating) */
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      padding: 5rem 2rem;
+      max-width: 1120px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .feature-row.reverse { direction: rtl; }
+    .feature-row.reverse > * { direction: ltr; }
+
+    .feature-text {}
+
+    .feature-image {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(34,227,198,0.15);
+      box-shadow: 0 24px 64px rgba(6,14,14,0.8), 0 0 80px rgba(191,212,0,0.08);
+      position: relative;
+    }
+
+    .feature-image::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(191,212,0,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .feature-image img {
+      display: block; width: 100%; height: auto;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin-top: 1.5rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+
+    .feature-list li {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+    }
+
+    .check-icon {
+      width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+      background: rgba(191,212,0,0.1);
+      border: 1px solid rgba(191,212,0,0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .check-icon svg { width: 11px; height: 11px; color: var(--green); }
+
+    /* Stats */
+    .stats-section {
+      background: rgba(191,212,0,0.04);
+      border-top: 1px solid rgba(34,227,198,0.12);
+      border-bottom: 1px solid rgba(34,227,198,0.12);
+      padding: 5rem 2rem;
+    }
+
+    .stats-grid {
+      max-width: 1120px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem; text-align: center;
+    }
+
+    .stat-item {}
+
+    .stat-number {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.5;
+    }
+
+    /* Testimonials */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+
+    .testimonial-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(34,227,198,0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: border-color 0.2s ease;
+    }
+    .testimonial-card:hover { border-color: rgba(34,227,198,0.3); }
+
+    .testimonial-stars {
+      display: flex; gap: 3px; margin-bottom: 1rem;
+    }
+
+    .star { color: #fbbf24; font-size: 0.85rem; }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+
+    .author-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(11,128,128,0.25);
+      border: 2px solid rgba(34,227,198,0.3);
+      overflow: hidden; flex-shrink: 0;
+    }
+
+    .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .author-name {
+      font-size: 0.9rem; font-weight: 600;
+    }
+
+    .author-role {
+      font-size: 0.8rem;
+      color: var(--neutral);
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(34,227,198,0.1);
+      border-radius: 20px;
+      padding: 2.25rem;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .pricing-card.featured {
+      background: rgba(11,128,128,0.12);
+      border-color: rgba(34,227,198,0.4);
+      position: relative;
+      box-shadow: 0 0 60px rgba(191,212,0,0.1);
+    }
+
+    .pricing-card:not(.featured):hover {
+      border-color: rgba(34,227,198,0.25);
+      transform: translateY(-2px);
+    }
+
+    .pricing-badge {
+      display: inline-block;
+      background: linear-gradient(130deg, #BFD400 0%, #22E3C6 60%, #0FFFF8 100%);
+      color: #040A0A;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1.25rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+
+    .pricing-name {
+      font-size: 1rem; font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.5rem;
+    }
+
+    .pricing-price {
+      font-size: 2.75rem; font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .pricing-period {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 1.75rem;
+    }
+
+    .pricing-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin-bottom: 1.75rem;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .pricing-features li {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* CTA section */
+    .cta-section {
+      position: relative;
+      padding: 8rem 2rem;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .cta-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 60% at 50% 50%, rgba(191,212,0,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 60% 60%, rgba(34,227,198,0.1) 0%, transparent 60%);
+    }
+
+    .cta-inner {
+      position: relative; z-index: 1;
+      max-width: 600px; margin: 0 auto;
+    }
+
+    .cta-inner h2 {
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    .cta-inner p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 4rem 2rem 3rem;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-brand {}
+
+    .footer-logo {
+      font-size: 1.25rem; font-weight: 700;
+      color: var(--white); text-decoration: none;
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-logo img { width: 28px; height: 28px; object-fit: contain; }
+
+    .footer-desc {
+      font-size: 0.87rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.65;
+      max-width: 280px;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-socials {
+      display: flex; gap: 0.75rem;
+    }
+
+    .social-link {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid rgba(34,227,198,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .social-link:hover { border-color: rgba(34,227,198,0.5); color: var(--cyan); }
+    .social-link svg { width: 16px; height: 16px; }
+
+    .footer-col h4 {
+      font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .footer-copy {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .footer-legal {
+      display: flex; gap: 1.5rem;
+    }
+
+    .footer-legal a {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-legal a:hover { color: rgba(255,255,255,0.65); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .feature-row { grid-template-columns: 1fr; gap: 2.5rem; direction: ltr !important; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .hero { padding: 6rem 1.25rem 4rem; }
+      .section { padding: 4rem 1.25rem; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">
+    Vivire
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#company">Company</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="#" class="btn-nav-ghost">Sign in</a>
+    <a href="#" class="btn-nav-primary">Get started</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Now with AI-powered insights
+    </div>
+
+    <h1>
+      Clarity for better<br>
+      <span class="grad-purple">decision-making</span>
+    </h1>
+
+    <p class="hero-sub">
+      Vivire brings all your data, workflows, and team intelligence into one place — so you can act with confidence, not guesswork.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary">
+        Get started free
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#" class="btn-ghost">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+        See how it works
+      </a>
+    </div>
+
+    <!-- Dashboard mockup -->
+    <div class="hero-mockup">
+      <div class="hero-mockup-inner">
+        <img src="https://placehold.co/900x520/060F0F/BFD400?text=Vivire+Dashboard" alt="Vivire dashboard">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUSTED BY ── -->
+<div class="logos-section">
+  <p class="logos-label">Trusted by forward-thinking teams</p>
+  <div class="logos-row">
+    <span class="logo-item">Meridian</span>
+    <span class="logo-item">Novexa</span>
+    <span class="logo-item">Cortex Labs</span>
+    <span class="logo-item">Stratos</span>
+    <span class="logo-item">Luminary</span>
+    <span class="logo-item">Fieldwork</span>
+  </div>
+</div>
+
+<!-- ── FEATURE CARDS ── -->
+<section class="section" id="features">
+  <div class="section-label">Platform</div>
+  <h2 class="section-title">
+    A new clear approach for<br>
+    <span class="grad-green">clear-headed management</span>
+  </h2>
+  <p class="section-sub">
+    Stop toggling between fragmented tools. Vivire gives every team one unified source of truth.
+  </p>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z"/></svg>
+      </div>
+      <h3>Unified data layer</h3>
+      <p>Connect every source — CRMs, spreadsheets, databases — and query them as one cohesive dataset without writing SQL.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <h3>Real-time automation</h3>
+      <p>Trigger actions across your stack the moment something changes — no polling, no delays, no manual intervention.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <h3>AI-powered insights</h3>
+      <p>Our models surface patterns and anomalies across your operations before they become expensive problems.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Team collaboration</h3>
+      <p>Share dashboards, annotate charts, and keep everyone aligned with real-time comments and notifications.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <h3>Custom dashboards</h3>
+      <p>Drag-and-drop widgets, flexible layouts, and pixel-perfect exports — built for presentations, not just engineers.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Enterprise security</h3>
+      <p>SOC 2 Type II, end-to-end encryption, SSO, and granular role-based access control built in from day one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURE ROW 1 ── -->
+<div class="feature-row">
+  <div class="feature-text">
+    <div class="section-label">Visibility</div>
+    <h2 class="section-title">See everything.<br>Miss nothing.</h2>
+    <p class="section-sub">
+      Vivire aggregates signals from across your business into a living dashboard that updates the moment data changes.
+    </p>
+    <ul class="feature-list">
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Live sync across 200+ integrations
+      </li>
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Smart anomaly detection with plain-English alerts
+      </li>
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Historical comparisons and trend forecasting
+      </li>
+    </ul>
+    <div style="margin-top: 2rem;">
+      <a href="#" class="btn-primary">Explore integrations</a>
+    </div>
+  </div>
+  <div class="feature-image">
+    <img src="https://placehold.co/560x420/060F0F/BFD400?text=Live+Dashboard" alt="Live dashboard">
+  </div>
+</div>
+
+<!-- ── FEATURE ROW 2 ── -->
+<div class="feature-row reverse">
+  <div class="feature-text">
+    <div class="section-label">Automation</div>
+    <h2 class="section-title">Your workflow,<br><span class="grad-purple">on autopilot.</span></h2>
+    <p class="section-sub">
+      Build powerful automations without a single line of code. Set triggers, conditions, and actions with a simple visual editor.
+    </p>
+    <ul class="feature-list">
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Visual no-code workflow builder
+      </li>
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Multi-step branching logic and conditionals
+      </li>
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Runs reliably at any scale, with full audit logs
+      </li>
+    </ul>
+    <div style="margin-top: 2rem;">
+      <a href="#" class="btn-ghost">Learn about automation</a>
+    </div>
+  </div>
+  <div class="feature-image">
+    <img src="https://placehold.co/560x420/060F0F/22E3C6?text=Workflow+Builder" alt="Workflow builder">
+  </div>
+</div>
+
+<!-- ── FEATURE ROW 3 ── -->
+<div class="feature-row">
+  <div class="feature-text">
+    <div class="section-label">Collaboration</div>
+    <h2 class="section-title">Your team,<br><span class="grad-green">finally in sync.</span></h2>
+    <p class="section-sub">
+      Share insights, assign follow-ups, and keep conversations anchored to the data — no more context-switching to Slack.
+    </p>
+    <ul class="feature-list">
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Inline comments on any chart or metric
+      </li>
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Role-based access and sharing controls
+      </li>
+      <li>
+        <span class="check-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        Export to PDF, Notion, Confluence, and more
+      </li>
+    </ul>
+    <div style="margin-top: 2rem;">
+      <a href="#" class="btn-primary">Start collaborating</a>
+    </div>
+  </div>
+  <div class="feature-image">
+    <img src="https://placehold.co/560x420/060F0F/22E3C6?text=Team+Workspace" alt="Team workspace">
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-number grad-green">~50%</div>
+      <div class="stat-label">reduction in time spent on reporting each week</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number grad-purple">3×</div>
+      <div class="stat-label">faster incident response with real-time alerts</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number grad-green">10k+</div>
+      <div class="stat-label">teams making better decisions every day</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number grad-purple">99.9%</div>
+      <div class="stat-label">platform uptime, guaranteed by SLA</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="section">
+  <div class="section-label">Testimonials</div>
+  <h2 class="section-title">Loved by teams<br>who move fast</h2>
+
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="testimonial-text">"Vivire replaced four separate tools for us. Our ops team now has a single view of everything — and our Monday morning standups went from 45 minutes to 15."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar"><img src="https://placehold.co/40x40/0B8080/BFD400?text=A" alt=""></div>
+        <div>
+          <div class="author-name">Alex Rivera</div>
+          <div class="author-role">Head of Operations, Meridian</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="testimonial-text">"The AI alerts caught a revenue discrepancy before our finance team even noticed. That one catch paid for an entire year of the subscription."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar"><img src="https://placehold.co/40x40/BFD400/040A0A?text=S" alt=""></div>
+        <div>
+          <div class="author-name">Sarah Chen</div>
+          <div class="author-role">CFO, Novexa</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <p class="testimonial-text">"Onboarding was shockingly fast. We were live and pulling real data in under an hour. The automation builder is genuinely a joy to use."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar"><img src="https://placehold.co/40x40/22E3C6/040A0A?text=M" alt=""></div>
+        <div>
+          <div class="author-name">Marcus Webb</div>
+          <div class="author-role">Engineering Lead, Cortex Labs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Simple pricing,<br>no surprises</h2>
+  <p class="section-sub">Start free. Scale as you grow. Cancel any time.</p>
+
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-name">Starter</div>
+      <div class="pricing-price">$0</div>
+      <div class="pricing-period">Free forever · up to 3 users</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          5 dashboards
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          10 integrations
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Basic automations
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Community support
+        </li>
+      </ul>
+      <a href="#" class="btn-ghost" style="display: block; text-align: center;">Get started free</a>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most popular</div>
+      <div class="pricing-name">Pro</div>
+      <div class="pricing-price grad-green">$49</div>
+      <div class="pricing-period">per month · billed annually</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Unlimited dashboards
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          200+ integrations
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Advanced automations + AI alerts
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Priority support (4h SLA)
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Up to 25 users
+        </li>
+      </ul>
+      <a href="#" class="btn-primary" style="display: block; text-align: center;">Start 14-day trial</a>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-name">Enterprise</div>
+      <div class="pricing-price">Custom</div>
+      <div class="pricing-period">Tailored to your team size</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Everything in Pro
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          SSO & SCIM provisioning
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Dedicated success manager
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          Custom SLA & uptime guarantee
+        </li>
+        <li>
+          <span class="check-icon"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          On-prem deployment option
+        </li>
+      </ul>
+      <a href="#" class="btn-ghost" style="display: block; text-align: center;">Contact sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <h2>
+      Turn data into action.<br>
+      <span class="grad-purple">Start today, free.</span>
+    </h2>
+    <p>
+      Join thousands of teams who replaced spreadsheet chaos with clarity. No credit card required.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="#" class="btn-primary">
+        Get started free
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#" class="btn-ghost">Talk to sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="footer-logo">
+        Vivire
+      </a>
+      <p class="footer-desc">
+        Vivire helps modern teams make better decisions through unified data, intelligent automation, and real-time collaboration.
+      </p>
+      <div class="footer-socials">
+        <a href="#" class="social-link" aria-label="Twitter">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.629 5.905-5.629Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="LinkedIn">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="GitHub">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul class="footer-links">
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Integrations</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Changelog</a></li>
+        <li><a href="#">Roadmap</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul class="footer-links">
+        <li><a href="#">Documentation</a></li>
+        <li><a href="#">API Reference</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">Status</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Partners</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Vivire. All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Settings</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

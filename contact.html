@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work With Us — Vivire Automations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green:     #8FDA0D;
+      --cyan:      #2EDDB5;
+      --teal:      #0B8080;
+      --deep-teal: #0B3B3B;
+      --bg:        #060E0E;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      font-family: 'Roboto', sans-serif;
+      color: #e8f5f5;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4, h5 { font-family: 'Montserrat', sans-serif; }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.45;
+    }
+
+    .grad-text {
+      background: linear-gradient(110deg, #8FDA0D 0%, #2EDDB5 55%, #1ABFA6 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    /* Nav */
+    .nav-wrap {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(6,14,14,0.88);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(46,221,181,0.08);
+    }
+    .nav-link {
+      font-family: 'Montserrat', sans-serif; font-weight: 500;
+      font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(232,245,245,0.6); text-decoration: none; transition: color 0.2s ease;
+    }
+    .nav-link:hover { color: #2EDDB5; }
+
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(130deg, #8FDA0D 0%, #2EDDB5 55%, #0B8080 100%);
+      font-family: 'Montserrat', sans-serif; font-weight: 700;
+      color: #060E0E; border-radius: 999px; letter-spacing: 0.03em;
+      text-decoration: none; cursor: pointer; border: none;
+      box-shadow: 0 4px 24px rgba(46,221,181,0.28), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease;
+    }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 40px rgba(46,221,181,0.42); }
+    .btn-ghost {
+      display: inline-block; text-decoration: none;
+      border: 1.5px solid rgba(46,221,181,0.4); color: #2EDDB5; border-radius: 999px;
+      font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: 0.02em;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease;
+    }
+    .btn-ghost:hover { background: rgba(46,221,181,0.08); border-color: rgba(46,221,181,0.75); transform: translateY(-2px); }
+
+    /* Resources dropdown */
+    .res-wrap { position: relative; }
+    .res-trigger { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+    .res-trigger svg { transition: transform 0.22s ease; }
+    .res-wrap:hover .res-trigger svg, .res-wrap:focus-within .res-trigger svg { transform: rotate(180deg); }
+    .res-dropdown {
+      position: absolute; top: calc(100% + 16px); right: -20px; width: 620px;
+      background: rgba(5,12,12,0.98); border: 1px solid rgba(46,221,181,0.13); border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.75); backdrop-filter: blur(28px);
+      padding: 1.75rem; display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 1.5rem;
+      opacity: 0; pointer-events: none; visibility: hidden; transform: translateY(-10px);
+      transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1), visibility 0.22s; z-index: 500;
+    }
+    .res-wrap:hover .res-dropdown, .res-wrap:focus-within .res-dropdown { opacity: 1; pointer-events: all; visibility: visible; transform: translateY(0); }
+    .res-col-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(46,221,181,0.5); margin-bottom: 1rem; display: block; }
+    .res-link { display: flex; align-items: center; gap: 10px; padding: 0.55rem 0.6rem; border-radius: 10px; text-decoration: none; margin-bottom: 2px; transition: background 0.18s ease; }
+    .res-link:hover { background: rgba(46,221,181,0.07); }
+    .res-link-icon { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(46,221,181,0.07); border: 1px solid rgba(46,221,181,0.1); }
+    .res-link-text { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; color: rgba(232,245,245,0.8); }
+    .res-link:hover .res-link-text { color: #2EDDB5; }
+    .res-featured-card { border-radius: 12px; overflow: hidden; text-decoration: none; display: block; background: rgba(11,56,56,0.3); border: 1px solid rgba(46,221,181,0.1); margin-bottom: 0.6rem; transition: border-color 0.2s ease, transform 0.2s ease; }
+    .res-featured-card:hover { border-color: rgba(46,221,181,0.28); transform: translateY(-2px); }
+    .res-featured-card img { width: 100%; height: 72px; object-fit: cover; display: block; filter: brightness(0.8); }
+    .res-featured-card-body { padding: 0.6rem 0.75rem; }
+    .res-featured-card-title { font-family: 'Montserrat', sans-serif; font-size: 0.73rem; font-weight: 700; color: #e8f5f5; line-height: 1.35; }
+
+    /* Animations */
+    @keyframes logo-glow-pulse {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(46,221,181,0.4)) drop-shadow(0 0 3px rgba(143,218,13,0.22)); }
+      50%       { filter: drop-shadow(0 0 22px rgba(46,221,181,0.75)) drop-shadow(0 0 10px rgba(143,218,13,0.45)); }
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+    .logo-mark { animation: logo-glow-pulse 3.5s ease-in-out infinite; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+    .logo-mark:hover { transform: scale(1.14) rotate(5deg); }
+    .anim-1 { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.05s both; }
+    .anim-2 { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.18s both; }
+    .anim-3 { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s both; }
+
+    /* ── Form styles ── */
+    .form-field-label {
+      display: block; font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+      color: rgba(232,245,245,0.55); margin-bottom: 0.45rem; text-transform: uppercase;
+    }
+    .form-input {
+      width: 100%; padding: 0.8rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(46,221,181,0.12);
+      border-radius: 10px;
+      color: #e8f5f5; font-family: 'Roboto', sans-serif; font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-input::placeholder { color: rgba(232,245,245,0.25); }
+    .form-input:focus {
+      border-color: rgba(46,221,181,0.45);
+      background: rgba(46,221,181,0.04);
+      box-shadow: 0 0 0 3px rgba(46,221,181,0.07);
+    }
+    select.form-input {
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpolyline points='2 4 6 8 10 4' stroke='%232EDDB5' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 1rem center;
+      padding-right: 2.5rem; cursor: pointer;
+    }
+    select.form-input option { background: #0A1A14; color: #e8f5f5; }
+
+    textarea.form-input { resize: vertical; min-height: 120px; line-height: 1.6; }
+
+    /* Budget tiles */
+    .budget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .budget-tile {
+      padding: 0.7rem 1rem; border-radius: 10px; cursor: pointer;
+      border: 1px solid rgba(46,221,181,0.12);
+      background: rgba(255,255,255,0.03);
+      font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600;
+      color: rgba(232,245,245,0.5); text-align: center;
+      transition: all 0.18s ease; user-select: none;
+    }
+    .budget-tile:hover { border-color: rgba(46,221,181,0.3); color: rgba(232,245,245,0.8); background: rgba(46,221,181,0.05); }
+    .budget-tile.selected {
+      border-color: #2EDDB5; color: #2EDDB5;
+      background: rgba(46,221,181,0.1);
+      box-shadow: 0 0 0 1px rgba(46,221,181,0.2);
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%; padding: 1rem 2rem;
+      background: linear-gradient(130deg, #8FDA0D 0%, #2EDDB5 55%, #0B8080 100%);
+      border: none; border-radius: 10px; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.9rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #060E0E;
+      box-shadow: 0 4px 24px rgba(46,221,181,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease;
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(46,221,181,0.42); }
+    .submit-btn:active { transform: translateY(0) scale(0.99); }
+
+    /* Contact info items */
+    .contact-item {
+      display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 1.5rem;
+    }
+    .contact-icon {
+      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(46,221,181,0.08); border: 1px solid rgba(46,221,181,0.15);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    #mobile-nav { display: none; }
+    #mobile-nav.open { display: flex; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ NAV ══ -->
+<header class="nav-wrap">
+  <div style="max-width:1280px; margin:0 auto; padding:0 1.5rem;">
+    <nav style="display:flex; align-items:center; justify-content:space-between; height:70px;">
+      <a href="index.html" style="display:flex; align-items:center; gap:4px; text-decoration:none;">
+        <img src="brand_assets/Untitled design (17).png" alt="Vivire logo" class="logo-mark" style="width:54px; height:54px; object-fit:contain;">
+        <p style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:1.1rem; letter-spacing:0.2em; color:#fff; text-transform:uppercase; line-height:1;">VIVIRE</p>
+      </a>
+      <div style="display:flex; align-items:center; gap:2.5rem;" class="hidden md:flex">
+        <a href="index.html#services" class="nav-link">Services</a>
+        <a href="index.html#how"      class="nav-link">How It Works</a>
+        <a href="index.html#results"  class="nav-link">Results</a>
+        <a href="pricing.html"        class="nav-link">Pricing</a>
+        <div class="res-wrap">
+          <button class="nav-link res-trigger" style="background:none; border:none; padding:0; cursor:pointer; display:flex; align-items:center; gap:5px;">
+            Resources
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 4 6 8 10 4"/></svg>
+          </button>
+          <div class="res-dropdown">
+            <div>
+              <span class="res-col-label">Vivire</span>
+              <a href="about.html" class="res-link"><div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span class="res-link-text">About</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><span class="res-link-text">Blog</span></a>
+              <a href="index.html#results" class="res-link"><div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="res-link-text">Case Studies</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8L2 7h20z"/></svg></div><span class="res-link-text">Careers</span></a>
+            </div>
+            <div>
+              <span class="res-col-label">Explore</span>
+              <a href="contact.html" class="res-link"><div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><span class="res-link-text" style="color:#8FDA0D;">Contact Us</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><span class="res-link-text" style="color:rgba(232,245,245,0.8);">Guides</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><span class="res-link-text" style="color:rgba(232,245,245,0.8);">Events</span></a>
+              <a href="#" class="res-link"><div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><span class="res-link-text" style="color:rgba(232,245,245,0.8);">Documentation</span></a>
+            </div>
+            <div>
+              <span class="res-col-label">Featured Insight</span>
+              <a href="#" class="res-featured-card"><img src="https://placehold.co/300x72/0B3B3B/2EDDB5?text=Automation+Trends" alt=""><div class="res-featured-card-body"><p class="res-featured-card-title">5 AI Workflows Every Business Should Automate in 2026</p><p style="font-family:'Roboto',sans-serif; font-size:0.67rem; color:rgba(232,245,245,0.35); margin-top:4px;">3 min read</p></div></a>
+              <a href="#" class="res-featured-card"><img src="https://placehold.co/300x72/071A10/8FDA0D?text=Cost+Savings" alt=""><div class="res-featured-card-body"><p class="res-featured-card-title">How Automation Cut Operational Costs by 60% for SMBs</p><p style="font-family:'Roboto',sans-serif; font-size:0.67rem; color:rgba(232,245,245,0.35); margin-top:4px;">5 min read</p></div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hidden md:flex" style="align-items:center; gap:0.875rem;">
+        <a href="index.html#pricing" class="btn-ghost" style="padding:0.6rem 1.4rem; font-size:0.8rem;">Log In</a>
+        <a href="contact.html" class="btn-primary" style="padding:0.65rem 1.5rem; font-size:0.82rem;">Book a Demo</a>
+      </div>
+      <button id="hamburger" class="md:hidden" aria-label="Open menu" style="background:none; border:none; cursor:pointer; padding:6px; color:rgba(232,245,245,0.7);" onclick="document.getElementById('mobile-nav').classList.toggle('open')">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="5" x2="20" y2="5"/><line x1="2" y1="11" x2="20" y2="11"/><line x1="2" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </nav>
+    <div id="mobile-nav" style="flex-direction:column; gap:0; padding-bottom:1.25rem; border-top:1px solid rgba(46,221,181,0.1);">
+      <a href="index.html#services" class="nav-link" style="display:block; padding:0.8rem 0.25rem;">Services</a>
+      <a href="index.html#how"      class="nav-link" style="display:block; padding:0.8rem 0.25rem;">How It Works</a>
+      <a href="index.html#results"  class="nav-link" style="display:block; padding:0.8rem 0.25rem;">Results</a>
+      <a href="pricing.html"        class="nav-link" style="display:block; padding:0.8rem 0.25rem;">Pricing</a>
+      <a href="about.html"          class="nav-link" style="display:block; padding:0.8rem 0.25rem;">About</a>
+      <a href="contact.html" class="btn-primary" style="display:block; text-align:center; padding:0.9rem 1.5rem; font-size:0.875rem; margin-top:0.75rem;">Book a Demo</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════ MAIN ══ -->
+<main style="padding-top:70px; min-height:100vh;">
+  <div style="max-width:860px; margin:0 auto; padding:5rem 1.5rem 5rem; display:flex; flex-direction:column; gap:3rem;">
+
+    <!-- ── TOP: Info section ── -->
+    <div class="anim-1">
+
+      <!-- Back link -->
+      <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:rgba(46,221,181,0.6); font-family:'Montserrat',sans-serif; font-size:0.72rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2rem; transition:color 0.2s ease;"
+        onmouseover="this.style.color='#2EDDB5'" onmouseout="this.style.color='rgba(46,221,181,0.6)'">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 2 4 7 9 12"/></svg>
+        Back to Home
+      </a>
+
+      <!-- Label -->
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#8FDA0D; margin-bottom:1.1rem;">Work With Us</p>
+
+      <!-- Heading -->
+      <h1 style="font-size:clamp(2rem,4vw,2.9rem); font-weight:800; letter-spacing:-0.03em; line-height:1.12; color:#fff; margin-bottom:1.5rem;">
+        Ready to automate your business with <span class="grad-text">AI?</span>
+      </h1>
+
+      <!-- Description -->
+      <p style="font-size:0.95rem; line-height:1.8; color:rgba(232,245,245,0.48); margin-bottom:2.75rem; max-width:620px;">
+        We help businesses unlock real operational efficiency by identifying where AI and automation can drive measurable impact — and then building and implementing those solutions end-to-end.
+      </p>
+
+      <!-- Contact info -->
+      <div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:700; color:#e8f5f5; margin-bottom:2px;">Based in</p>
+            <p style="font-size:0.85rem; color:rgba(232,245,245,0.45);">United States</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:700; color:#e8f5f5; margin-bottom:2px;">Email</p>
+            <a href="mailto:hello@vivire.ai" style="font-size:0.85rem; color:rgba(232,245,245,0.45); text-decoration:none; transition:color 0.2s ease;"
+              onmouseover="this.style.color='#2EDDB5'" onmouseout="this.style.color='rgba(232,245,245,0.45)'">hello@vivire.ai</a>
+          </div>
+        </div>
+
+        <div class="contact-item" style="margin-bottom:0;">
+          <div class="contact-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:700; color:#e8f5f5; margin-bottom:2px;">Working globally</p>
+            <p style="font-size:0.85rem; color:rgba(232,245,245,0.45);">Clients across the US, UK & worldwide</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="height:1px; background:linear-gradient(90deg,rgba(46,221,181,0.15),transparent); margin:2.5rem 0;"></div>
+
+      <!-- Social proof -->
+      <div style="display:flex; align-items:center; gap:0.875rem;">
+        <div style="display:flex;">
+          <div style="width:30px;height:30px;border-radius:50%;border:2px solid #060E0E;background:linear-gradient(135deg,#2EDDB5,#0B8080);display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;color:#060E0E;margin-right:-7px;font-family:'Montserrat',sans-serif;">A</div>
+          <div style="width:30px;height:30px;border-radius:50%;border:2px solid #060E0E;background:linear-gradient(135deg,#8FDA0D,#2EDDB5);display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;color:#060E0E;margin-right:-7px;font-family:'Montserrat',sans-serif;">B</div>
+          <div style="width:30px;height:30px;border-radius:50%;border:2px solid #060E0E;background:linear-gradient(135deg,#1ABFA6,#8FDA0D);display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;color:#060E0E;font-family:'Montserrat',sans-serif;">C</div>
+        </div>
+        <p style="font-size:0.78rem; color:rgba(232,245,245,0.4); font-family:'Roboto',sans-serif;">
+          Join <strong style="color:#8FDA0D;">150+</strong> businesses already automated
+        </p>
+      </div>
+    </div>
+
+    <!-- ── BOTTOM: Form ── -->
+    <div class="anim-2">
+      <div style="background:linear-gradient(145deg, rgba(10,22,18,0.9) 0%, rgba(7,14,12,0.95) 100%); border:1px solid rgba(46,221,181,0.12); border-radius:20px; padding:2.5rem; position:relative; overflow:hidden;
+        box-shadow:0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(46,221,181,0.06);">
+
+        <!-- Top gradient line -->
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#2EDDB5 40%,#8FDA0D 60%,transparent);opacity:0.6;"></div>
+
+        <form id="contact-form">
+          <!-- Honeypot -->
+          <input type="text" name="_honey" style="display:none;" tabindex="-1" autocomplete="off">
+
+          <!-- Row 1: First / Last Name -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+            <div>
+              <label class="form-field-label">First Name</label>
+              <input type="text" name="first_name" placeholder="First Name" class="form-input" required>
+            </div>
+            <div>
+              <label class="form-field-label">Last Name</label>
+              <input type="text" name="last_name" placeholder="Last Name" class="form-input" required>
+            </div>
+          </div>
+
+          <!-- Row 2: Email / Company -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+            <div>
+              <label class="form-field-label">Work Email</label>
+              <input type="email" name="email" placeholder="you@company.com" class="form-input" required>
+            </div>
+            <div>
+              <label class="form-field-label">Company</label>
+              <input type="text" name="company" placeholder="Your company" class="form-input">
+            </div>
+          </div>
+
+          <!-- Row 3: Phone (full width) -->
+          <div style="margin-bottom:1.25rem;">
+            <label class="form-field-label">Phone Number</label>
+            <input type="tel" name="phone" placeholder="+1 (555) 000-0000" class="form-input" required>
+          </div>
+
+          <!-- Row 4: Website (full width) -->
+          <div style="margin-bottom:1.25rem;">
+            <label class="form-field-label">Company Website</label>
+            <input type="url" name="website" placeholder="https://yourcompany.com" class="form-input">
+          </div>
+
+          <!-- Row 4: Role / Company Size -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+            <div>
+              <label class="form-field-label">Your Role</label>
+              <select name="role" class="form-input">
+                <option value="" disabled selected>Select your role</option>
+                <option>Founder / CEO</option>
+                <option>COO / Operations</option>
+                <option>Marketing Lead</option>
+                <option>Sales Lead</option>
+                <option>IT / Tech Lead</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-field-label">Company Size</label>
+              <select name="company_size" class="form-input">
+                <option value="" disabled selected>Number of employees</option>
+                <option>1 – 10</option>
+                <option>11 – 50</option>
+                <option>51 – 200</option>
+                <option>201 – 500</option>
+                <option>500+</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 5: Budget Range (tiles) -->
+          <div style="margin-bottom:1.25rem;">
+            <label class="form-field-label">Budget Range</label>
+            <input type="hidden" name="budget" id="budget-value">
+            <div class="budget-grid">
+              <div class="budget-tile" onclick="selectBudget(this, 'Starter — $2,500 + $750/mo')">Starter<br><span style="font-size:0.7rem;font-weight:400;opacity:0.7;">$2,500 + $750/mo</span></div>
+              <div class="budget-tile" onclick="selectBudget(this, 'Growth — $5,500 + $1,500/mo')">Growth<br><span style="font-size:0.7rem;font-weight:400;opacity:0.7;">$5,500 + $1,500/mo</span></div>
+              <div class="budget-tile" onclick="selectBudget(this, 'Scale — $10,000 + $3,000/mo')">Scale<br><span style="font-size:0.7rem;font-weight:400;opacity:0.7;">$10,000 + $3,000/mo</span></div>
+              <div class="budget-tile" onclick="selectBudget(this, 'Not Sure Yet')">Not Sure Yet</div>
+            </div>
+          </div>
+
+          <!-- Row 6: Tell Us About Your Project -->
+          <div style="margin-bottom:1.75rem;">
+            <label class="form-field-label">Tell Us About Your Project</label>
+            <textarea name="message" class="form-input" placeholder="What challenges are you facing? What does success look like for your business?" required></textarea>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="submit-btn" id="submit-btn">
+            Submit Inquiry
+            <svg id="submit-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9 4 13 8 9 12"/></svg>
+          </button>
+
+          <!-- Success message -->
+          <div id="form-success" style="display:none; margin-top:1.25rem; padding:1rem 1.25rem; border-radius:10px; background:rgba(46,221,181,0.08); border:1px solid rgba(46,221,181,0.25); text-align:center;">
+            <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.85rem; color:#2EDDB5; margin-bottom:4px;">We got your message!</p>
+            <p style="font-size:0.78rem; color:rgba(232,245,245,0.45);">Our team will be in touch within 24 hours.</p>
+          </div>
+
+          <!-- Error message -->
+          <div id="form-error" style="display:none; margin-top:1.25rem; padding:1rem 1.25rem; border-radius:10px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); text-align:center;">
+            <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.85rem; color:#ef4444; margin-bottom:4px;">Something went wrong.</p>
+            <p style="font-size:0.78rem; color:rgba(232,245,245,0.45);">Please email us directly at hello@vivire.ai</p>
+          </div>
+        </form>
+
+        <p style="text-align:center; font-family:'Roboto',sans-serif; font-size:0.7rem; color:rgba(232,245,245,0.2); margin-top:1.25rem;">
+          Your information is secure and never shared with third parties.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  // Swap to your public n8n URL when the site goes live
+  const N8N_WEBHOOK = 'https://YOUR_N8N_URL/webhook/vivire-lead-capture';
+
+  function selectBudget(el, value) {
+    document.querySelectorAll('.budget-tile').forEach(t => t.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('budget-value').value = value;
+  }
+
+  document.getElementById('contact-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Block honeypot submissions
+    if (this._honey && this._honey.value) return;
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const fd = new FormData(this);
+    const payload = Object.fromEntries(fd.entries());
+
+    try {
+      const res = await fetch(N8N_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        this.style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      } else {
+        throw new Error('non-200');
+      }
+    } catch {
+      btn.disabled = false;
+      btn.innerHTML = 'Submit Inquiry <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9 4 13 8 9 12"/></svg>';
+      document.getElementById('form-error').style.display = 'block';
+    }
+  });
+</script>
+<script>
+  (function (d, t) {
+    var g = document.createElement(t), s = d.getElementsByTagName(t)[0];
+    g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+    g.defer = true; g.async = true;
+    s.parentNode.insertBefore(g, s);
+    g.onload = function () {
+      window.vapiSDK.run({
+        apiKey: "5b7a1d64-2061-487a-99ce-d8c600ede18b",
+        assistant: "b06c6629-6896-4ed9-a880-0269f3d96f67",
+        config: {
+          position: "bottom-right",
+          offset: "24px",
+          idle:    { color: "#2EDDB5", type: "pill", title: "Talk to Vivi",   subtitle: "AI Assistant",   icon: "https://unpkg.com/lucide-static@0.321.0/icons/mic.svg" },
+          loading: { color: "#8FDA0D", type: "pill", title: "Connecting...",  subtitle: "Please wait",    icon: "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg" },
+          active:  { color: "#ef4444", type: "pill", title: "End Call",       subtitle: "Tap to hang up", icon: "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg" }
+        }
+      });
+    };
+  })(document, "script");
+</script>
+</body>
+</html>
