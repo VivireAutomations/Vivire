@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vivire Automations — Automate. Grow. Thrive.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green:     #8FDA0D;
+      --cyan:      #2EDDB5;
+      --teal:      #0B8080;
+      --deep-teal: #0B3B3B;
+      --bg:        #060E0E;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      font-family: 'Roboto', sans-serif;
+      color: #e8f5f5;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5 { font-family: 'Montserrat', sans-serif; }
+
+    /* ── Grain texture ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999; opacity: 0.45;
+    }
+
+    /* ── Gradient text ── */
+    .grad-text {
+      background: linear-gradient(110deg, #8FDA0D 0%, #2EDDB5 55%, #1ABFA6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(130deg, #8FDA0D 0%, #2EDDB5 55%, #0B8080 100%);
+      font-family: 'Montserrat', sans-serif; font-weight: 700;
+      color: #060E0E; border-radius: 999px; letter-spacing: 0.03em;
+      text-decoration: none; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(46,221,181,0.28), 0 2px 8px rgba(143,218,13,0.18), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 40px rgba(46,221,181,0.42), 0 4px 14px rgba(143,218,13,0.28), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+    .btn-primary:active { transform: translateY(0) scale(0.985); }
+    .btn-primary:focus-visible { outline: 2px solid #2EDDB5; outline-offset: 3px; }
+
+    .btn-ghost {
+      display: inline-block; text-decoration: none;
+      border: 1.5px solid rgba(46,221,181,0.4);
+      color: #2EDDB5; border-radius: 999px;
+      font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: 0.02em;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-ghost:hover {
+      background: rgba(46,221,181,0.08); border-color: rgba(46,221,181,0.75);
+      transform: translateY(-2px);
+    }
+    .btn-ghost:active { transform: translateY(0); }
+    .btn-ghost:focus-visible { outline: 2px solid #2EDDB5; outline-offset: 3px; }
+
+    /* ── Nav ── */
+    .nav-wrap {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(6,14,14,0.84);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(46,221,181,0.08);
+    }
+    .nav-link {
+      font-family: 'Montserrat', sans-serif; font-weight: 500;
+      font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(232,245,245,0.6); text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover { color: #2EDDB5; }
+    .nav-link:focus-visible { outline: 2px solid #2EDDB5; outline-offset: 2px; border-radius: 4px; }
+
+    /* ── Resources dropdown ── */
+    .res-wrap {
+      position: relative;
+    }
+    .res-trigger {
+      display: flex; align-items: center; gap: 5px; cursor: pointer;
+    }
+    .res-trigger svg { transition: transform 0.22s ease; }
+    .res-wrap:hover .res-trigger svg,
+    .res-wrap:focus-within .res-trigger svg { transform: rotate(180deg); }
+    .res-dropdown {
+      position: absolute; top: calc(100% + 16px); right: -20px;
+      width: 620px;
+      background: rgba(5,12,12,0.98);
+      border: 1px solid rgba(46,221,181,0.13);
+      border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.75), 0 4px 24px rgba(46,221,181,0.07);
+      backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+      padding: 1.75rem;
+      display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 1.5rem;
+      opacity: 0; pointer-events: none; visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1), visibility 0.22s;
+      z-index: 500;
+    }
+    .res-wrap:hover .res-dropdown,
+    .res-wrap:focus-within .res-dropdown {
+      opacity: 1; pointer-events: all; visibility: visible; transform: translateY(0);
+    }
+    .res-col-label {
+      font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase; color: rgba(46,221,181,0.5);
+      margin-bottom: 1rem; display: block;
+    }
+    .res-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0.55rem 0.6rem; border-radius: 10px;
+      text-decoration: none; margin-bottom: 2px;
+      transition: background 0.18s ease;
+    }
+    .res-link:hover { background: rgba(46,221,181,0.07); }
+    .res-link-icon {
+      width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(46,221,181,0.07); border: 1px solid rgba(46,221,181,0.1);
+    }
+    .res-link-text { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; color: rgba(232,245,245,0.8); }
+    .res-link:hover .res-link-text { color: #2EDDB5; }
+    .res-featured-card {
+      border-radius: 12px; overflow: hidden; text-decoration: none; display: block;
+      background: rgba(11,56,56,0.3); border: 1px solid rgba(46,221,181,0.1);
+      margin-bottom: 0.6rem;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .res-featured-card:hover { border-color: rgba(46,221,181,0.28); transform: translateY(-2px); }
+    .res-featured-card img { width: 100%; height: 72px; object-fit: cover; display: block; filter: brightness(0.8); }
+    .res-featured-card-body { padding: 0.6rem 0.75rem; }
+    .res-featured-card-title { font-family: 'Montserrat', sans-serif; font-size: 0.73rem; font-weight: 700; color: #e8f5f5; line-height: 1.35; }
+
+    /* ── Section helpers ── */
+    .section-label {
+      display: inline-block; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase; color: #8FDA0D;
+      margin-bottom: 1rem;
+    }
+
+    .bg-hero {
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse 90% 65% at 10% 20%, rgba(46,221,181,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 65% 55% at 88% 80%, rgba(143,218,13,0.08) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 45% at 50% 110%, rgba(11,59,59,0.55) 0%, transparent 80%);
+    }
+    .bg-alt {
+      background-color: #070F0F;
+      background-image:
+        radial-gradient(ellipse 70% 50% at 95% 50%, rgba(46,221,181,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 5% 50%, rgba(143,218,13,0.04) 0%, transparent 70%);
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(46,221,181,0.02) 100%);
+      border: 1px solid rgba(46,221,181,0.1);
+      border-radius: 1.25rem;
+      transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(46,221,181,0.25);
+      box-shadow: 0 12px 48px rgba(46,221,181,0.09), 0 4px 12px rgba(0,0,0,0.38);
+    }
+
+    .stat-card {
+      background: rgba(46,221,181,0.03);
+      border: 1px solid rgba(46,221,181,0.12);
+      border-radius: 1rem;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(46,221,181,0.25) 30%, rgba(143,218,13,0.22) 65%, transparent 100%);
+    }
+
+    /* ── Icon badge ── */
+    .icon-badge {
+      width: 50px; height: 50px; border-radius: 14px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Step number ── */
+    .step-num {
+      width: 44px; height: 44px; border-radius: 13px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 0.78rem;
+    }
+
+    /* ── Animations ── */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-16px); }
+    }
+    @keyframes float-slow {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-10px); }
+    }
+    @keyframes pulse-orb {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50%       { opacity: 0.65; transform: scale(1.08); }
+    }
+    @keyframes spin-ring {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes spin-ring-rev {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+    @keyframes badge-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(143,218,13,0.45); }
+      50%       { box-shadow: 0 0 0 7px rgba(143,218,13,0); }
+    }
+    @keyframes ticker-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes dash-flow {
+      from { stroke-dashoffset: 0; }
+      to   { stroke-dashoffset: -24; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes logo-glow-pulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 6px rgba(46,221,181,0.4))
+                drop-shadow(0 0 3px rgba(143,218,13,0.22));
+      }
+      50% {
+        filter: drop-shadow(0 0 22px rgba(46,221,181,0.75))
+                drop-shadow(0 0 10px rgba(143,218,13,0.45))
+                drop-shadow(0 2px 30px rgba(46,221,181,0.25));
+      }
+    }
+
+    .float      { animation: float 7s ease-in-out infinite; }
+    .float-slow { animation: float-slow 10s ease-in-out infinite 2s; }
+    .pulse-orb  { animation: pulse-orb 5.5s ease-in-out infinite; }
+
+    .logo-mark {
+      animation: logo-glow-pulse 3.5s ease-in-out infinite;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .logo-mark:hover {
+      transform: scale(1.14) rotate(5deg);
+    }
+    .logo-mark:active {
+      transform: scale(0.96) rotate(2deg);
+    }
+    .badge-dot  { animation: badge-pulse 2.5s ease-in-out infinite; }
+    .dash-anim  { animation: dash-flow 1.8s linear infinite; }
+    .fade-in-up { animation: fadeInUp 0.7s ease forwards; }
+
+    /* ── Ticker ── */
+    .ticker-wrap { overflow: hidden; }
+    .ticker-track {
+      display: flex; width: max-content;
+      animation: ticker-scroll 30s linear infinite;
+    }
+    .ticker-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0 2.5rem; white-space: nowrap;
+      font-family: 'Montserrat', sans-serif; font-weight: 600;
+      font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(232,245,245,0.4);
+    }
+    .ticker-dot { width: 5px; height: 5px; border-radius: 50%; background: #8FDA0D; flex-shrink: 0; }
+
+    /* ── Mobile nav ── */
+    #mobile-nav { display: none; }
+    #mobile-nav.open { display: flex; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(46,221,181,0.28); border-radius: 99px; }
+
+    /* ── Tooltip badge ── */
+    .floating-badge {
+      position: absolute;
+      background: rgba(6,14,14,0.92);
+      border: 1px solid rgba(46,221,181,0.22);
+      border-radius: 0.75rem;
+      padding: 0.65rem 0.9rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    /* ── Pricing ── */
+    .plan-card {
+      background: linear-gradient(155deg, rgba(255,255,255,0.03) 0%, rgba(46,221,181,0.025) 100%);
+      border: 1px solid rgba(46,221,181,0.1);
+      border-radius: 1.5rem;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .plan-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(46,221,181,0.3);
+      box-shadow: 0 20px 60px rgba(46,221,181,0.1), 0 6px 18px rgba(0,0,0,0.4);
+    }
+    .plan-featured {
+      background: linear-gradient(155deg, rgba(46,221,181,0.08) 0%, rgba(143,218,13,0.04) 100%);
+      border-color: rgba(46,221,181,0.28);
+      box-shadow: 0 0 0 1px rgba(46,221,181,0.12), 0 10px 50px rgba(46,221,181,0.12);
+    }
+    .plan-featured:hover { transform: translateY(-10px); }
+
+    .check-item {
+      display: flex; align-items: center; gap: 0.65rem;
+      font-size: 0.875rem; color: rgba(232,245,245,0.7);
+      font-family: 'Roboto', sans-serif;
+    }
+    .check-icon {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(143,218,13,0.12);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Footer ── */
+    .footer-link {
+      font-size: 0.875rem; color: rgba(232,245,245,0.42);
+      text-decoration: none; font-family: 'Roboto', sans-serif;
+      transition: color 0.2s ease;
+    }
+    .footer-link:hover { color: #2EDDB5; }
+    .footer-link:focus-visible { outline: 2px solid #2EDDB5; outline-offset: 2px; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════ -->
+<header class="nav-wrap">
+  <div style="max-width:1280px; margin:0 auto; padding:0 1.5rem;">
+    <nav style="display:flex; align-items:center; justify-content:space-between; height:70px;">
+
+      <!-- Logo lockup -->
+      <a href="#" style="display:flex; align-items:center; gap:4px; text-decoration:none;" aria-label="Vivire Automations home">
+        <img src="brand_assets/Untitled design (17).png" alt="Vivire logo" class="logo-mark" style="width:54px; height:54px; object-fit:contain;">
+        <p style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:1.1rem; letter-spacing:0.2em; color:#fff; text-transform:uppercase; line-height:1;">VIVIRE</p>
+      </a>
+
+      <!-- Desktop links -->
+      <div style="display:flex; align-items:center; gap:2.5rem;" class="hidden md:flex">
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#how"      class="nav-link">How It Works</a>
+        <a href="#results"  class="nav-link">Results</a>
+        <a href="pricing.html" class="nav-link">Pricing</a>
+
+        <!-- Resources dropdown -->
+        <div class="res-wrap">
+          <button class="nav-link res-trigger" style="background:none; border:none; padding:0; cursor:pointer; display:flex; align-items:center; gap:5px;">
+            Resources
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 4 6 8 10 4"/></svg>
+          </button>
+
+          <div class="res-dropdown">
+            <!-- Col 1: Vivire -->
+            <div>
+              <span class="res-col-label">Vivire</span>
+              <a href="about.html" class="res-link">
+                <div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+                <span class="res-link-text">About</span>
+              </a>
+              <a href="#results" class="res-link">
+                <div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                <span class="res-link-text">Case Studies</span>
+              </a>
+              <a href="#" class="res-link">
+                <div class="res-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8L2 7h20z"/></svg></div>
+                <span class="res-link-text">Careers</span>
+              </a>
+            </div>
+
+            <!-- Col 2: Explore -->
+            <div>
+              <span class="res-col-label">Explore</span>
+              <a href="contact.html" class="res-link">
+                <div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                <span class="res-link-text" style="color:#8FDA0D;">Contact Us</span>
+              </a>
+              <a href="#" class="res-link">
+                <div class="res-link-icon" style="background:rgba(143,218,13,0.07); border-color:rgba(143,218,13,0.1);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+                <span class="res-link-text" style="color:rgba(232,245,245,0.8);">Guides</span>
+              </a>
+            </div>
+
+            <!-- Col 3: Featured -->
+            <div>
+              <span class="res-col-label">Featured Insight</span>
+              <a href="#" class="res-featured-card">
+                <img src="https://placehold.co/300x72/0B3B3B/2EDDB5?text=Automation+Trends" alt="">
+                <div class="res-featured-card-body">
+                  <p class="res-featured-card-title">5 AI Workflows Every Business Should Automate in 2026</p>
+                  <p style="font-family:'Roboto',sans-serif; font-size:0.67rem; color:rgba(232,245,245,0.35); margin-top:4px;">3 min read</p>
+                </div>
+              </a>
+              <a href="#" class="res-featured-card">
+                <img src="https://placehold.co/300x72/071A10/8FDA0D?text=Cost+Savings" alt="">
+                <div class="res-featured-card-body">
+                  <p class="res-featured-card-title">How Automation Cut Operational Costs by 60% for SMBs</p>
+                  <p style="font-family:'Roboto',sans-serif; font-size:0.67rem; color:rgba(232,245,245,0.35); margin-top:4px;">5 min read</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="hidden md:flex" style="align-items:center; gap:0.875rem;">
+        <a href="#pricing" class="btn-ghost" style="padding:0.6rem 1.4rem; font-size:0.8rem;">Log In</a>
+        <a href="contact.html" class="btn-primary" style="padding:0.65rem 1.5rem; font-size:0.82rem;">Get Started</a>
+      </div>
+
+      <!-- Hamburger -->
+      <button id="hamburger" class="md:hidden" aria-label="Open menu"
+        style="background:none; border:none; cursor:pointer; padding:6px; color:rgba(232,245,245,0.7);"
+        onclick="document.getElementById('mobile-nav').classList.toggle('open')">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="2" y1="5" x2="20" y2="5"/>
+          <line x1="2" y1="11" x2="20" y2="11"/>
+          <line x1="2" y1="17" x2="20" y2="17"/>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-nav" style="flex-direction:column; gap:0; padding-bottom:1.25rem; border-top:1px solid rgba(46,221,181,0.1);">
+      <a href="#services" class="nav-link" style="display:block; padding:0.8rem 0.25rem;">Services</a>
+      <a href="#how"      class="nav-link" style="display:block; padding:0.8rem 0.25rem;">How It Works</a>
+      <a href="#results"  class="nav-link" style="display:block; padding:0.8rem 0.25rem;">Results</a>
+      <a href="pricing.html" class="nav-link" style="display:block; padding:0.8rem 0.25rem;">Pricing</a>
+      <div style="border-top:1px solid rgba(46,221,181,0.07); margin:0.25rem 0; padding-top:0.5rem;">
+        <p style="font-family:'Montserrat',sans-serif; font-size:0.62rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:rgba(46,221,181,0.5); padding:0.4rem 0.25rem 0.5rem;">Resources</p>
+        <a href="about.html" class="nav-link" style="display:block; padding:0.65rem 0.5rem;">About</a>
+        <a href="#" class="nav-link" style="display:block; padding:0.65rem 0.5rem;">Blog</a>
+        <a href="#results" class="nav-link" style="display:block; padding:0.65rem 0.5rem;">Case Studies</a>
+        <a href="#" class="nav-link" style="display:block; padding:0.65rem 0.5rem;">Guides</a>
+      </div>
+      <a href="contact.html" class="btn-primary" style="display:block; text-align:center; padding:0.9rem 1.5rem; font-size:0.875rem; margin-top:0.75rem;">Get Started</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="bg-hero" id="top" style="min-height:100vh; display:flex; align-items:center; padding:9rem 1.5rem 6rem; position:relative; overflow:hidden;">
+
+  <!-- Ambient orbs -->
+  <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+    <div class="pulse-orb" style="position:absolute; top:-180px; left:-140px; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle, rgba(46,221,181,0.12) 0%, transparent 70%);"></div>
+    <div class="pulse-orb" style="position:absolute; bottom:-120px; right:-100px; width:450px; height:450px; border-radius:50%; background:radial-gradient(circle, rgba(143,218,13,0.08) 0%, transparent 70%); animation-delay:3s;"></div>
+    <!-- Circuit grid decoration -->
+    <svg aria-hidden="true" style="position:absolute; right:-60px; top:50%; transform:translateY(-50%); width:600px; opacity:0.04;" viewBox="0 0 500 500" fill="none">
+      <circle cx="60"  cy="60"  r="6" fill="#2EDDB5"/>
+      <circle cx="200" cy="90"  r="6" fill="#8FDA0D"/>
+      <circle cx="340" cy="50"  r="6" fill="#2EDDB5"/>
+      <circle cx="430" cy="200" r="8" fill="#8FDA0D"/>
+      <circle cx="250" cy="250" r="7" fill="#2EDDB5"/>
+      <circle cx="100" cy="380" r="6" fill="#8FDA0D"/>
+      <circle cx="390" cy="400" r="7" fill="#2EDDB5"/>
+      <circle cx="60"  cy="440" r="5" fill="#8FDA0D"/>
+      <circle cx="300" cy="320" r="5" fill="#2EDDB5"/>
+      <line x1="60"  y1="60"  x2="200" y2="90"  stroke="#2EDDB5" stroke-width="1.5"/>
+      <line x1="200" y1="90"  x2="340" y2="50"  stroke="#8FDA0D" stroke-width="1.5"/>
+      <line x1="340" y1="50"  x2="430" y2="200" stroke="#2EDDB5" stroke-width="1.5"/>
+      <line x1="430" y1="200" x2="250" y2="250" stroke="#8FDA0D" stroke-width="1.5"/>
+      <line x1="250" y1="250" x2="100" y2="380" stroke="#2EDDB5" stroke-width="1.5"/>
+      <line x1="100" y1="380" x2="390" y2="400" stroke="#8FDA0D" stroke-width="1.5"/>
+      <line x1="250" y1="250" x2="300" y2="320" stroke="#2EDDB5" stroke-width="1" stroke-dasharray="6 6" class="dash-anim"/>
+      <line x1="60"  y1="60"  x2="250" y2="250" stroke="#2EDDB5" stroke-width="1" stroke-dasharray="6 6" class="dash-anim" style="animation-delay:0.9s"/>
+      <line x1="390" y1="400" x2="430" y2="200" stroke="#8FDA0D" stroke-width="1" stroke-dasharray="6 6" class="dash-anim" style="animation-delay:1.8s"/>
+      <line x1="60"  y1="440" x2="100" y2="380" stroke="#2EDDB5" stroke-width="1.5"/>
+    </svg>
+    <!-- Floating particles -->
+    <div class="float"      style="position:absolute; top:27%; right:35%; width:9px; height:9px; border-radius:50%; background:#8FDA0D; opacity:0.55;"></div>
+    <div class="float-slow" style="position:absolute; top:43%; right:24%; width:6px; height:6px; border-radius:50%; background:#2EDDB5; opacity:0.6;"></div>
+    <div class="float"      style="position:absolute; bottom:28%; left:20%; width:7px; height:7px; border-radius:50%; background:#2EDDB5; opacity:0.45; animation-delay:3.2s;"></div>
+    <div class="float-slow" style="position:absolute; top:20%; left:35%; width:5px; height:5px; border-radius:50%; background:#8FDA0D; opacity:0.4; animation-delay:1.5s;"></div>
+  </div>
+
+  <div style="max-width:1280px; margin:0 auto; width:100%; position:relative; z-index:10;">
+    <div style="display:grid; grid-template-columns:1fr; gap:5rem; align-items:center;" class="lg:grid-cols-[55%_45%]">
+
+      <!-- LEFT: Copy -->
+      <div>
+        <!-- Announcement badge -->
+        <div style="display:inline-flex; align-items:center; gap:10px; padding:0.48rem 1rem; border-radius:999px; background:rgba(143,218,13,0.07); border:1px solid rgba(143,218,13,0.22); margin-bottom:2rem;">
+          <span class="badge-dot" style="width:8px; height:8px; border-radius:50%; background:#8FDA0D; box-shadow:0 0 7px #8FDA0D; display:block; flex-shrink:0;"></span>
+          <span style="font-family:'Montserrat',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#8FDA0D;">AI Automation Experts</span>
+        </div>
+
+        <h1 style="font-family:'Montserrat',sans-serif; font-size:clamp(2.8rem,6.5vw,5rem); font-weight:900; line-height:1.02; letter-spacing:-0.03em; color:#fff; margin-bottom:1.5rem;">
+          Automate<br>
+          <span class="grad-text">Smarter.</span><br>
+          Scale Faster.
+        </h1>
+
+        <p style="font-size:1.075rem; line-height:1.8; color:rgba(232,245,245,0.58); max-width:490px; margin-bottom:2.75rem; font-family:'Roboto',sans-serif;">
+          Vivire Automations designs and deploys intelligent AI workflows that eliminate repetitive tasks, reduce operational costs, and unlock exponential business growth — so you can focus on what matters most.
+        </p>
+
+        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:3.5rem;">
+          <a href="contact.html" class="btn-primary" style="padding:0.95rem 2.25rem; font-size:0.95rem;">
+            Book a Demo
+          </a>
+          <a href="#how" class="btn-ghost" style="padding:0.95rem 2.25rem; font-size:0.95rem;">
+            See How It Works
+          </a>
+        </div>
+
+        <!-- Trust row -->
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:2rem;">
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <div style="display:flex;">
+              <div style="width:34px; height:34px; border-radius:50%; border:2px solid #060E0E; background:linear-gradient(135deg,#2EDDB5,#0B8080); display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:700; color:#060E0E; margin-right:-9px; font-family:'Montserrat',sans-serif;">A</div>
+              <div style="width:34px; height:34px; border-radius:50%; border:2px solid #060E0E; background:linear-gradient(135deg,#8FDA0D,#2EDDB5); display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:700; color:#060E0E; margin-right:-9px; font-family:'Montserrat',sans-serif;">B</div>
+              <div style="width:34px; height:34px; border-radius:50%; border:2px solid #060E0E; background:linear-gradient(135deg,#1ABFA6,#8FDA0D); display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:700; color:#060E0E; margin-right:-9px; font-family:'Montserrat',sans-serif;">C</div>
+              <div style="width:34px; height:34px; border-radius:50%; border:2px solid #060E0E; background:rgba(46,221,181,0.15); display:flex; align-items:center; justify-content:center; font-size:0.68rem; font-weight:700; color:#2EDDB5; font-family:'Montserrat',sans-serif;">+</div>
+            </div>
+            <p style="font-size:0.82rem; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif;">
+              <strong style="color:#8FDA0D; font-weight:700;">150+</strong> businesses automated
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <div style="display:flex; gap:2px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span style="font-size:0.82rem; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif;"><strong style="color:#fff;">5.0</strong> avg rating</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Hero visual -->
+      <div style="display:flex; justify-content:center; align-items:center; position:relative; min-height:420px;">
+        <!-- Glow core -->
+        <div class="pulse-orb" aria-hidden="true" style="position:absolute; width:360px; height:360px; border-radius:50%; background:radial-gradient(circle, rgba(46,221,181,0.15) 0%, rgba(143,218,13,0.07) 45%, transparent 70%); pointer-events:none;"></div>
+        <!-- Outer spinning ring -->
+        <div aria-hidden="true" style="position:absolute; top:50%; left:50%; width:460px; height:460px; border-radius:50%; border:1px dashed rgba(46,221,181,0.14); animation: spin-ring 35s linear infinite;"></div>
+        <!-- Inner spinning ring (reverse) -->
+        <div aria-hidden="true" style="position:absolute; top:50%; left:50%; width:380px; height:380px; border-radius:50%; border:1px solid rgba(143,218,13,0.09); animation: spin-ring-rev 25s linear infinite;"></div>
+        <!-- Static ring -->
+        <div aria-hidden="true" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:300px; height:300px; border-radius:50%; border:1px solid rgba(46,221,181,0.06);"></div>
+
+        <!-- Logo -->
+        <img
+          src="brand_assets/Untitled design (17).png"
+          alt="Vivire Automations"
+          class="float logo-mark"
+          style="width:clamp(220px,26vw,360px); height:auto; object-fit:contain; position:relative; z-index:2;">
+
+        <!-- Floating badges -->
+        <div class="floating-badge float-slow" style="top:8%; right:2%; z-index:10;">
+          <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.68rem; color:#8FDA0D; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:2px;">Workflows Built</p>
+          <p style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:1.2rem; color:#fff; letter-spacing:-0.02em; line-height:1;">500+</p>
+        </div>
+
+        <div class="floating-badge float" style="bottom:10%; left:2%; z-index:10; animation-delay:1.5s;">
+          <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.68rem; color:#2EDDB5; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:2px;">Hours Saved</p>
+          <p style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:1.2rem; color:#fff; letter-spacing:-0.02em; line-height:1;">10K+</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Feature pills row ── -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:3.5rem; padding-top:3rem; border-top:1px solid rgba(46,221,181,0.08);">
+
+      <!-- AI Optimization -->
+      <div style="display:flex; flex-direction:column; gap:0.85rem; padding:1.5rem; border-radius:16px; background:rgba(11,56,56,0.28); border:1px solid rgba(46,221,181,0.12); box-shadow:0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(46,221,181,0.06); transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;"
+        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 36px rgba(0,0,0,0.4), 0 0 20px rgba(46,221,181,0.1), inset 0 1px 0 rgba(46,221,181,0.1)';"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(46,221,181,0.06)';">
+        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,rgba(46,221,181,0.18),rgba(46,221,181,0.06)); border:1px solid rgba(46,221,181,0.22); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a5 5 0 0 1 5 5c0 1.5-.6 2.8-1.6 3.8L17 13h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1v1a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-1H6a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h1l1.6-2.2A5 5 0 0 1 12 2z"/>
+            <line x1="9" y1="17" x2="9" y2="19"/><line x1="12" y1="17" x2="12" y2="20"/><line x1="15" y1="17" x2="15" y2="19"/>
+          </svg>
+        </div>
+        <div>
+          <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.88rem; color:#fff; margin-bottom:0.3rem; letter-spacing:-0.01em;">AI Optimization</p>
+          <p style="font-family:'Roboto',sans-serif; font-size:0.76rem; color:rgba(232,245,245,0.45); line-height:1.5;">Leverage advanced AI</p>
+        </div>
+      </div>
+
+      <!-- Cost Reduction -->
+      <div style="display:flex; flex-direction:column; gap:0.85rem; padding:1.5rem; border-radius:16px; background:rgba(11,56,56,0.28); border:1px solid rgba(143,218,13,0.12); box-shadow:0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(143,218,13,0.06); transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;"
+        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 36px rgba(0,0,0,0.4), 0 0 20px rgba(143,218,13,0.1), inset 0 1px 0 rgba(143,218,13,0.1)';"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(143,218,13,0.06)';">
+        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,rgba(143,218,13,0.18),rgba(143,218,13,0.06)); border:1px solid rgba(143,218,13,0.22); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div>
+          <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.88rem; color:#fff; margin-bottom:0.3rem; letter-spacing:-0.01em;">Cost Reduction</p>
+          <p style="font-family:'Roboto',sans-serif; font-size:0.76rem; color:rgba(232,245,245,0.45); line-height:1.5;">Lower operational expenses</p>
+        </div>
+      </div>
+
+      <!-- Business Scaling -->
+      <div style="display:flex; flex-direction:column; gap:0.85rem; padding:1.5rem; border-radius:16px; background:rgba(11,56,56,0.28); border:1px solid rgba(46,221,181,0.12); box-shadow:0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(46,221,181,0.06); transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;"
+        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 36px rgba(0,0,0,0.4), 0 0 20px rgba(46,221,181,0.1), inset 0 1px 0 rgba(46,221,181,0.1)';"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(46,221,181,0.06)';">
+        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,rgba(26,191,166,0.18),rgba(26,191,166,0.06)); border:1px solid rgba(26,191,166,0.22); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1ABFA6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+          </svg>
+        </div>
+        <div>
+          <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.88rem; color:#fff; margin-bottom:0.3rem; letter-spacing:-0.01em;">Business Scaling</p>
+          <p style="font-family:'Roboto',sans-serif; font-size:0.76rem; color:rgba(232,245,245,0.45); line-height:1.5;">Achieve exponential growth</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     TICKER
+════════════════════════════════════════════ -->
+<div style="background:#040C0C; border-top:1px solid rgba(46,221,181,0.07); border-bottom:1px solid rgba(46,221,181,0.07); padding:1rem 0;">
+  <div class="ticker-wrap">
+    <div class="ticker-track" aria-hidden="true">
+      <!-- Two copies for seamless loop -->
+      <span class="ticker-item"><span class="ticker-dot"></span>Zapier Automations</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Make.com Workflows</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>AI Chatbots</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>CRM Integrations</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Email Marketing AI</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Social Media Automation</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Lead Generation</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Customer Onboarding</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Data Pipeline Automation</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>AI Voice Agents</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Zapier Automations</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Make.com Workflows</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>AI Chatbots</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>CRM Integrations</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Email Marketing AI</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Social Media Automation</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Lead Generation</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Customer Onboarding</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Data Pipeline Automation</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>AI Voice Agents</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     STATS
+════════════════════════════════════════════ -->
+<section style="background:#06100F; padding:4rem 1.5rem;">
+  <div style="max-width:1280px; margin:0 auto;">
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:1rem;" class="md:grid-cols-4">
+      <div class="stat-card" style="padding:2rem 1.5rem; text-align:center;">
+        <p class="grad-text" style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:clamp(2rem,4vw,2.75rem); letter-spacing:-0.03em; line-height:1;">150+</p>
+        <p style="font-size:0.78rem; font-family:'Roboto',sans-serif; color:rgba(232,245,245,0.45); margin-top:0.5rem; letter-spacing:0.04em;">Businesses Automated</p>
+      </div>
+      <div class="stat-card" style="padding:2rem 1.5rem; text-align:center;">
+        <p class="grad-text" style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:clamp(2rem,4vw,2.75rem); letter-spacing:-0.03em; line-height:1;">10K+</p>
+        <p style="font-size:0.78rem; font-family:'Roboto',sans-serif; color:rgba(232,245,245,0.45); margin-top:0.5rem; letter-spacing:0.04em;">Hours Saved Monthly</p>
+      </div>
+      <div class="stat-card" style="padding:2rem 1.5rem; text-align:center;">
+        <p class="grad-text" style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:clamp(2rem,4vw,2.75rem); letter-spacing:-0.03em; line-height:1;">98%</p>
+        <p style="font-size:0.78rem; font-family:'Roboto',sans-serif; color:rgba(232,245,245,0.45); margin-top:0.5rem; letter-spacing:0.04em;">Client Satisfaction</p>
+      </div>
+      <div class="stat-card" style="padding:2rem 1.5rem; text-align:center;">
+        <p class="grad-text" style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:clamp(2rem,4vw,2.75rem); letter-spacing:-0.03em; line-height:1;">3x</p>
+        <p style="font-size:0.78rem; font-family:'Roboto',sans-serif; color:rgba(232,245,245,0.45); margin-top:0.5rem; letter-spacing:0.04em;">Average ROI Delivered</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     SERVICES
+════════════════════════════════════════════ -->
+<section class="bg-alt" id="services" style="padding:6.5rem 1.5rem;">
+  <div style="max-width:1280px; margin:0 auto;">
+    <div style="text-align:center; max-width:620px; margin:0 auto 4.5rem;">
+      <span class="section-label">What We Build</span>
+      <h2 style="font-size:clamp(2rem,4.5vw,3.2rem); font-weight:900; letter-spacing:-0.03em; line-height:1.08; margin-bottom:1.25rem;">
+        Automation solutions <span class="grad-text">built for growth</span>
+      </h2>
+      <p style="font-size:0.97rem; line-height:1.8; color:rgba(232,245,245,0.55); font-family:'Roboto',sans-serif;">
+        We architect end-to-end automation systems tailored to your business — no generic templates, no cookie-cutter solutions.
+      </p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr; gap:1.25rem;" class="md:grid-cols-2 lg:grid-cols-3">
+
+      <!-- Service 1 -->
+      <div class="card" style="padding:2.25rem;">
+        <div class="icon-badge" style="background:rgba(143,218,13,0.1); border:1px solid rgba(143,218,13,0.18); margin-bottom:1.75rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3 style="font-weight:700; font-size:1.07rem; color:#fff; letter-spacing:-0.01em; margin-bottom:0.75rem;">AI Workflow Automation</h3>
+        <p style="font-size:0.86rem; line-height:1.82; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif; margin-bottom:1.5rem;">
+          Custom multi-step automation pipelines using Zapier, Make.com, and n8n — connecting your entire tool stack into one seamless system.
+        </p>
+        <a href="ai-workflow-automation.html" style="display:inline-flex; align-items:center; gap:0.4rem; font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:700; color:#8FDA0D; text-decoration:none; letter-spacing:0.04em; transition:gap 0.2s ease;">
+          Learn more
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+        </a>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="card" style="padding:2.25rem; border-color:rgba(46,221,181,0.18); background:linear-gradient(145deg, rgba(46,221,181,0.05) 0%, rgba(255,255,255,0.02) 100%);">
+        <div class="icon-badge" style="background:rgba(46,221,181,0.1); border:1px solid rgba(46,221,181,0.2); margin-bottom:1.75rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <h3 style="font-weight:700; font-size:1.07rem; color:#fff; letter-spacing:-0.01em; margin-bottom:0.75rem;">AI Chatbots & Voice Agents</h3>
+        <p style="font-size:0.86rem; line-height:1.82; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif; margin-bottom:1.5rem;">
+          Intelligent conversational agents that handle customer support, lead qualification, and appointment booking — 24/7, without human intervention.
+        </p>
+        <a href="ai-chatbots-voice-agents.html" style="display:inline-flex; align-items:center; gap:0.4rem; font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:700; color:#2EDDB5; text-decoration:none; letter-spacing:0.04em; transition:gap 0.2s ease;">
+          Learn more
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+        </a>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="card" style="padding:2.25rem;">
+        <div class="icon-badge" style="background:rgba(143,218,13,0.1); border:1px solid rgba(143,218,13,0.18); margin-bottom:1.75rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3 style="font-weight:700; font-size:1.07rem; color:#fff; letter-spacing:-0.01em; margin-bottom:0.75rem;">CRM & Lead Automation</h3>
+        <p style="font-size:0.86rem; line-height:1.82; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif; margin-bottom:1.5rem;">
+          Automated lead capture, nurturing sequences, and CRM data hygiene — so your sales team spends time closing, not admin work.
+        </p>
+        <a href="crm-lead-automation.html" style="display:inline-flex; align-items:center; gap:0.4rem; font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:700; color:#8FDA0D; text-decoration:none; letter-spacing:0.04em; transition:gap 0.2s ease;">
+          Learn more
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+        </a>
+      </div>
+
+      <!-- Service 4 -->
+      <div class="card" style="padding:2.25rem;">
+        <div class="icon-badge" style="background:rgba(46,221,181,0.1); border:1px solid rgba(46,221,181,0.2); margin-bottom:1.75rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <h3 style="font-weight:700; font-size:1.07rem; color:#fff; letter-spacing:-0.01em; margin-bottom:0.75rem;">Social Media & Content AI</h3>
+        <p style="font-size:0.86rem; line-height:1.82; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif; margin-bottom:1.5rem;">
+          AI-powered content generation, scheduling, and cross-platform publishing systems that keep your brand active around the clock.
+        </p>
+        <a href="social-media-content-ai.html" style="display:inline-flex; align-items:center; gap:0.4rem; font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:700; color:#2EDDB5; text-decoration:none; letter-spacing:0.04em; transition:gap 0.2s ease;">
+          Learn more
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+        </a>
+      </div>
+
+      <!-- Service 5 -->
+      <div class="card" style="padding:2.25rem;">
+        <div class="icon-badge" style="background:rgba(143,218,13,0.1); border:1px solid rgba(143,218,13,0.18); margin-bottom:1.75rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8FDA0D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+          </svg>
+        </div>
+        <h3 style="font-weight:700; font-size:1.07rem; color:#fff; letter-spacing:-0.01em; margin-bottom:0.75rem;">Operations & Back-Office</h3>
+        <p style="font-size:0.86rem; line-height:1.82; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif; margin-bottom:1.5rem;">
+          Automate invoicing, reporting, internal notifications, and data syncing across your entire operational stack — zero manual effort.
+        </p>
+        <a href="operations-back-office.html" style="display:inline-flex; align-items:center; gap:0.4rem; font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:700; color:#8FDA0D; text-decoration:none; letter-spacing:0.04em; transition:gap 0.2s ease;">
+          Learn more
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+        </a>
+      </div>
+
+      <!-- Service 6 -->
+      <div class="card" style="padding:2.25rem;">
+        <div class="icon-badge" style="background:rgba(46,221,181,0.1); border:1px solid rgba(46,221,181,0.2); margin-bottom:1.75rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h3 style="font-weight:700; font-size:1.07rem; color:#fff; letter-spacing:-0.01em; margin-bottom:0.75rem;">Custom AI Integrations</h3>
+        <p style="font-size:0.86rem; line-height:1.82; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif; margin-bottom:1.5rem;">
+          Bespoke GPT-powered tools, data extraction systems, and AI decision engines built specifically for your industry and use case.
+        </p>
+        <a href="custom-ai-integrations.html" style="display:inline-flex; align-items:center; gap:0.4rem; font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:700; color:#2EDDB5; text-decoration:none; letter-spacing:0.04em; transition:gap 0.2s ease;">
+          Learn more
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9,4 13,8 9,12"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════ -->
+<section style="background:#060E0E; padding:6.5rem 1.5rem;" id="how">
+  <div style="max-width:1280px; margin:0 auto;">
+    <div style="display:grid; grid-template-columns:1fr; gap:5rem; align-items:center;" class="lg:grid-cols-2">
+
+      <!-- Copy -->
+      <div>
+        <span class="section-label">How It Works</span>
+        <h2 style="font-size:clamp(2rem,4.5vw,3.2rem); font-weight:900; letter-spacing:-0.03em; line-height:1.08; margin-bottom:1.25rem;">
+          From discovery to<br><span class="grad-text">deployed in days</span>
+        </h2>
+        <p style="font-size:0.97rem; line-height:1.8; color:rgba(232,245,245,0.55); margin-bottom:2.25rem; font-family:'Roboto',sans-serif; max-width:460px;">
+          We handle the entire automation journey — from mapping your current processes to building, testing, and maintaining your systems — so you never have to touch a line of code.
+        </p>
+
+        <ul style="display:flex; flex-direction:column; gap:0.9rem;">
+          <li style="display:flex; align-items:center; gap:0.75rem;">
+            <div class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#8FDA0D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span style="font-size:0.875rem; color:rgba(232,245,245,0.68); font-family:'Roboto',sans-serif;">No technical expertise required on your end</span>
+          </li>
+          <li style="display:flex; align-items:center; gap:0.75rem;">
+            <div class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#8FDA0D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span style="font-size:0.875rem; color:rgba(232,245,245,0.68); font-family:'Roboto',sans-serif;">Ongoing maintenance and monitoring included</span>
+          </li>
+          <li style="display:flex; align-items:center; gap:0.75rem;">
+            <div class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#8FDA0D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span style="font-size:0.875rem; color:rgba(232,245,245,0.68); font-family:'Roboto',sans-serif;">Scalable systems that grow with your business</span>
+          </li>
+          <li style="display:flex; align-items:center; gap:0.75rem;">
+            <div class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#8FDA0D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span style="font-size:0.875rem; color:rgba(232,245,245,0.68); font-family:'Roboto',sans-serif;">Dedicated support and iteration cycles</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Steps timeline -->
+      <div style="position:relative;">
+        <div class="pulse-orb" aria-hidden="true" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:360px; height:360px; border-radius:50%; background:radial-gradient(circle, rgba(46,221,181,0.06) 0%, transparent 70%); pointer-events:none;"></div>
+
+        <div style="display:flex; flex-direction:column; gap:1.1rem; position:relative; z-index:2;">
+
+          <!-- Step 1 -->
+          <div class="card" style="padding:1.75rem; display:flex; align-items:flex-start; gap:1.25rem;">
+            <div class="step-num" style="background:linear-gradient(135deg,#8FDA0D,#2EDDB5); color:#060E0E;">01</div>
+            <div>
+              <h4 style="font-weight:700; font-size:0.97rem; color:#fff; margin-bottom:0.45rem; letter-spacing:-0.01em;">Discovery Call</h4>
+              <p style="font-size:0.84rem; line-height:1.78; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif;">We map your current workflows, identify bottlenecks, and define the highest-impact automation opportunities for your business.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="card" style="padding:1.75rem; display:flex; align-items:flex-start; gap:1.25rem; border-color:rgba(46,221,181,0.2);">
+            <div class="step-num" style="background:linear-gradient(135deg,#2EDDB5,#0B8080); color:#fff;">02</div>
+            <div>
+              <h4 style="font-weight:700; font-size:0.97rem; color:#fff; margin-bottom:0.45rem; letter-spacing:-0.01em;">Build & Integrate</h4>
+              <p style="font-size:0.84rem; line-height:1.78; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif;">Our team builds your custom automation system, integrates it with your existing tools, and runs comprehensive QA testing before launch.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="card" style="padding:1.75rem; display:flex; align-items:flex-start; gap:1.25rem;">
+            <div class="step-num" style="background:linear-gradient(135deg,#8FDA0D,#2EDDB5); color:#060E0E;">03</div>
+            <div>
+              <h4 style="font-weight:700; font-size:0.97rem; color:#fff; margin-bottom:0.45rem; letter-spacing:-0.01em;">Launch & Optimize</h4>
+              <p style="font-size:0.84rem; line-height:1.78; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif;">We deploy, monitor performance, and continuously optimize your workflows — expanding automation coverage as your needs grow.</p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="card" style="padding:1.75rem; display:flex; align-items:flex-start; gap:1.25rem; border-color:rgba(143,218,13,0.18);">
+            <div class="step-num" style="background:linear-gradient(135deg,#2EDDB5,#8FDA0D); color:#060E0E;">04</div>
+            <div>
+              <h4 style="font-weight:700; font-size:0.97rem; color:#fff; margin-bottom:0.45rem; letter-spacing:-0.01em;">Scale & Grow</h4>
+              <p style="font-size:0.84rem; line-height:1.78; color:rgba(232,245,245,0.5); font-family:'Roboto',sans-serif;">With operations running on autopilot, focus entirely on growth — while we layer in new automation opportunities to compound your results.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════════ -->
+<section class="bg-alt" id="results" style="padding:6.5rem 1.5rem;">
+  <div style="max-width:1280px; margin:0 auto;">
+    <div style="text-align:center; max-width:580px; margin:0 auto 4rem;">
+      <span class="section-label">Client Results</span>
+      <h2 style="font-size:clamp(2rem,4.5vw,3.2rem); font-weight:900; letter-spacing:-0.03em; line-height:1.08;">
+        Real outcomes from<br><span class="grad-text">real businesses</span>
+      </h2>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr; gap:1.25rem;" class="md:grid-cols-3">
+
+      <!-- Testimonial 1 -->
+      <div class="card" style="padding:2.25rem;">
+        <div style="display:flex; gap:3px; margin-bottom:1.25rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <!-- Result callout -->
+        <div style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.35rem 0.8rem; border-radius:999px; background:rgba(143,218,13,0.09); border:1px solid rgba(143,218,13,0.2); margin-bottom:1.25rem;">
+          <span style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.7rem; color:#8FDA0D; letter-spacing:0.06em; text-transform:uppercase;">+40 hrs saved / week</span>
+        </div>
+        <p style="font-size:0.875rem; line-height:1.82; color:rgba(232,245,245,0.62); margin-bottom:1.75rem; font-family:'Roboto',sans-serif; font-style:italic;">
+          "Vivire rebuilt our entire client onboarding from scratch. What used to take my team 3 hours per client now happens automatically in minutes. The ROI was immediate."
+        </p>
+        <div style="display:flex; align-items:center; gap:0.875rem;">
+          <div style="width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#2EDDB5,#0B8080); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:700; color:#060E0E; font-size:0.78rem; flex-shrink:0;">MJ</div>
+          <div>
+            <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.85rem; color:#fff;">Marcus J.</p>
+            <p style="font-size:0.75rem; color:rgba(232,245,245,0.38); font-family:'Roboto',sans-serif;">Founder, Apex Consulting</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 — featured -->
+      <div class="card" style="padding:2.25rem; border-color:rgba(46,221,181,0.28); background:linear-gradient(155deg, rgba(46,221,181,0.07) 0%, rgba(255,255,255,0.02) 100%);">
+        <div style="display:flex; gap:3px; margin-bottom:1.25rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.35rem 0.8rem; border-radius:999px; background:rgba(46,221,181,0.09); border:1px solid rgba(46,221,181,0.22); margin-bottom:1.25rem;">
+          <span style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.7rem; color:#2EDDB5; letter-spacing:0.06em; text-transform:uppercase;">3x Revenue Growth</span>
+        </div>
+        <p style="font-size:0.875rem; line-height:1.82; color:rgba(232,245,245,0.75); margin-bottom:1.75rem; font-family:'Roboto',sans-serif; font-style:italic;">
+          "Within 60 days of working with Vivire, our lead response time dropped from 2 hours to 90 seconds. That alone tripled our conversion rate. These guys don't just build automations — they build growth engines."
+        </p>
+        <div style="display:flex; align-items:center; gap:0.875rem;">
+          <div style="width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#8FDA0D,#2EDDB5); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:700; color:#060E0E; font-size:0.78rem; flex-shrink:0;">SR</div>
+          <div>
+            <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.85rem; color:#fff;">Sofia R.</p>
+            <p style="font-size:0.75rem; color:rgba(232,245,245,0.38); font-family:'Roboto',sans-serif;">CEO, Nova eCommerce</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="card" style="padding:2.25rem;">
+        <div style="display:flex; gap:3px; margin-bottom:1.25rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#8FDA0D"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.35rem 0.8rem; border-radius:999px; background:rgba(143,218,13,0.09); border:1px solid rgba(143,218,13,0.2); margin-bottom:1.25rem;">
+          <span style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.7rem; color:#8FDA0D; letter-spacing:0.06em; text-transform:uppercase;">$8K / mo Saved</span>
+        </div>
+        <p style="font-size:0.875rem; line-height:1.82; color:rgba(232,245,245,0.62); margin-bottom:1.75rem; font-family:'Roboto',sans-serif; font-style:italic;">
+          "I replaced two full-time admin hires with an AI system Vivire built for us in under two weeks. It handles our entire back-office. Absolutely game-changing for a small team like ours."
+        </p>
+        <div style="display:flex; align-items:center; gap:0.875rem;">
+          <div style="width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#1ABFA6,#8FDA0D); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:700; color:#060E0E; font-size:0.78rem; flex-shrink:0;">DL</div>
+          <div>
+            <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.85rem; color:#fff;">Devon L.</p>
+            <p style="font-size:0.75rem; color:rgba(232,245,245,0.38); font-family:'Roboto',sans-serif;">Operations Director, Lumina Agency</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+
+<!-- ════════════════════════════════════════════
+     CTA SECTION
+════════════════════════════════════════════ -->
+<section style="background:linear-gradient(155deg, #060E0E 0%, #0B3B3B 50%, #060E0E 100%); padding:7.5rem 1.5rem; position:relative; overflow:hidden;">
+  <!-- Ambient glow -->
+  <div aria-hidden="true" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+    <div class="pulse-orb" style="width:800px; height:500px; border-radius:50%; background:radial-gradient(ellipse, rgba(46,221,181,0.1) 0%, rgba(143,218,13,0.05) 40%, transparent 70%);"></div>
+  </div>
+  <!-- Circuit left -->
+  <svg aria-hidden="true" style="position:absolute; left:0; top:50%; transform:translateY(-50%); opacity:0.04; width:280px;" viewBox="0 0 200 320" fill="none">
+    <circle cx="20" cy="60" r="5" fill="#2EDDB5"/>
+    <circle cx="90" cy="150" r="5" fill="#8FDA0D"/>
+    <circle cx="25" cy="250" r="5" fill="#2EDDB5"/>
+    <line x1="20" y1="60" x2="90" y2="150" stroke="#2EDDB5" stroke-width="1.5"/>
+    <line x1="90" y1="150" x2="25" y2="250" stroke="#8FDA0D" stroke-width="1.5"/>
+    <line x1="20" y1="60" x2="25" y2="250" stroke="#2EDDB5" stroke-width="1" stroke-dasharray="5 5" class="dash-anim"/>
+  </svg>
+  <!-- Circuit right -->
+  <svg aria-hidden="true" style="position:absolute; right:0; top:50%; transform:translateY(-50%); opacity:0.04; width:280px;" viewBox="0 0 200 320" fill="none">
+    <circle cx="180" cy="60"  r="5" fill="#8FDA0D"/>
+    <circle cx="110" cy="150" r="5" fill="#2EDDB5"/>
+    <circle cx="175" cy="250" r="5" fill="#8FDA0D"/>
+    <line x1="180" y1="60"  x2="110" y2="150" stroke="#8FDA0D" stroke-width="1.5"/>
+    <line x1="110" y1="150" x2="175" y2="250" stroke="#2EDDB5" stroke-width="1.5"/>
+    <line x1="180" y1="60"  x2="175" y2="250" stroke="#8FDA0D" stroke-width="1" stroke-dasharray="5 5" class="dash-anim"/>
+  </svg>
+
+  <div style="max-width:700px; margin:0 auto; text-align:center; position:relative; z-index:2;">
+    <div style="display:inline-flex; align-items:center; gap:10px; padding:0.5rem 1.1rem; border-radius:999px; background:rgba(143,218,13,0.07); border:1px solid rgba(143,218,13,0.22); margin-bottom:2rem;">
+      <span class="badge-dot" style="width:8px; height:8px; border-radius:50%; background:#8FDA0D; box-shadow:0 0 8px #8FDA0D; display:block; flex-shrink:0;"></span>
+      <span style="font-family:'Montserrat',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#8FDA0D;">Free Consultation Available</span>
+    </div>
+
+    <h2 style="font-size:clamp(2.4rem,5.5vw,4rem); font-weight:900; letter-spacing:-0.03em; line-height:1.04; color:#fff; margin-bottom:1.5rem;">
+      Ready to automate<br><span class="grad-text">your business?</span>
+    </h2>
+    <p style="font-size:1.05rem; line-height:1.8; color:rgba(232,245,245,0.58); max-width:500px; margin:0 auto 2.75rem; font-family:'Roboto',sans-serif;">
+      Book a free 30-minute strategy call. We'll map your biggest automation opportunities and show you exactly what's possible — zero obligation.
+    </p>
+
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-bottom:1.25rem;">
+      <a href="contact.html" class="btn-primary" style="padding:1.05rem 2.5rem; font-size:1rem;">
+        Book Free Strategy Call
+      </a>
+      <a href="#services" class="btn-ghost" style="padding:1.05rem 2.5rem; font-size:1rem;">
+        Explore Services
+      </a>
+    </div>
+
+    <p style="font-size:0.78rem; color:rgba(232,245,245,0.28); font-family:'Roboto',sans-serif;">No commitment. No credit card. Just a conversation.</p>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer style="background:#030909; border-top:1px solid rgba(46,221,181,0.07);">
+  <div style="max-width:1280px; margin:0 auto; padding:4rem 1.5rem 2.5rem;">
+    <div style="display:grid; grid-template-columns:1fr; gap:3rem;" class="md:grid-cols-[2fr_1fr_1fr_1fr]">
+
+      <!-- Brand col -->
+      <div>
+        <a href="#top" style="display:inline-flex; align-items:center; gap:4px; text-decoration:none; margin-bottom:1.5rem;">
+          <img src="brand_assets/Untitled design (17).png" alt="" class="logo-mark" style="width:38px; height:38px; object-fit:contain;">
+          <p style="font-family:'Montserrat',sans-serif; font-weight:900; font-size:1rem; letter-spacing:0.2em; color:#fff; text-transform:uppercase; line-height:1;">VIVIRE</p>
+        </a>
+        <p style="font-size:0.85rem; line-height:1.82; color:rgba(232,245,245,0.38); max-width:280px; font-family:'Roboto',sans-serif; margin-bottom:1.75rem;">
+          We design intelligent automation systems that eliminate manual work, reduce costs, and accelerate growth for businesses worldwide.
+        </p>
+        <!-- Social icons -->
+        <div style="display:flex; gap:0.75rem;">
+          <a href="#" aria-label="Instagram" style="width:36px; height:36px; border-radius:10px; background:rgba(46,221,181,0.07); border:1px solid rgba(46,221,181,0.12); display:flex; align-items:center; justify-content:center; color:rgba(232,245,245,0.5); transition:background 0.2s ease, color 0.2s ease; text-decoration:none;"
+            onmouseover="this.style.background='rgba(46,221,181,0.14)'; this.style.color='#2EDDB5';"
+            onmouseout="this.style.background='rgba(46,221,181,0.07)'; this.style.color='rgba(232,245,245,0.5)';">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" style="width:36px; height:36px; border-radius:10px; background:rgba(46,221,181,0.07); border:1px solid rgba(46,221,181,0.12); display:flex; align-items:center; justify-content:center; color:rgba(232,245,245,0.5); transition:background 0.2s ease, color 0.2s ease; text-decoration:none;"
+            onmouseover="this.style.background='rgba(46,221,181,0.14)'; this.style.color='#2EDDB5';"
+            onmouseout="this.style.background='rgba(46,221,181,0.07)'; this.style.color='rgba(232,245,245,0.5)';">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube" style="width:36px; height:36px; border-radius:10px; background:rgba(46,221,181,0.07); border:1px solid rgba(46,221,181,0.12); display:flex; align-items:center; justify-content:center; color:rgba(232,245,245,0.5); transition:background 0.2s ease, color 0.2s ease; text-decoration:none;"
+            onmouseover="this.style.background='rgba(46,221,181,0.14)'; this.style.color='#2EDDB5';"
+            onmouseout="this.style.background='rgba(46,221,181,0.07)'; this.style.color='rgba(232,245,245,0.5)';">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20.06 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.97A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Services -->
+      <div>
+        <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:#fff; margin-bottom:1.5rem;">Services</p>
+        <ul style="display:flex; flex-direction:column; gap:0.8rem; list-style:none;">
+          <li><a href="#services" class="footer-link">AI Workflows</a></li>
+          <li><a href="#services" class="footer-link">Chatbots & Voice AI</a></li>
+          <li><a href="#services" class="footer-link">CRM Automation</a></li>
+          <li><a href="#services" class="footer-link">Content AI</a></li>
+          <li><a href="#services" class="footer-link">Operations</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:#fff; margin-bottom:1.5rem;">Company</p>
+        <ul style="display:flex; flex-direction:column; gap:0.8rem; list-style:none;">
+          <li><a href="#how" class="footer-link">How It Works</a></li>
+          <li><a href="#results" class="footer-link">Case Studies</a></li>
+          <li><a href="contact.html" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <p style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:#fff; margin-bottom:1.5rem;">Get in Touch</p>
+        <a href="contact.html" style="display:flex; align-items:center; gap:0.6rem; text-decoration:none; margin-bottom:1rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span style="font-size:0.82rem; color:rgba(232,245,245,0.45); font-family:'Roboto',sans-serif; word-break:break-all;">marquelsmith52@gmail.com</span>
+        </a>
+        <a href="#pricing" class="btn-primary" style="display:block; text-align:center; padding:0.75rem 1.25rem; font-size:0.8rem; margin-top:1.25rem;">Book a Call</a>
+      </div>
+    </div>
+
+    <div class="divider" style="margin:2.5rem 0;"></div>
+
+    <div style="display:flex; flex-direction:column; gap:1rem; align-items:center; text-align:center;" class="md:flex-row md:justify-between">
+      <p style="font-size:0.75rem; color:rgba(232,245,245,0.25); font-family:'Roboto',sans-serif;">© 2026 Vivire Automations. All rights reserved.</p>
+      <div style="display:flex; gap:1.5rem;">
+        <a href="#" class="footer-link" style="font-size:0.75rem;">Privacy Policy</a>
+        <a href="#" class="footer-link" style="font-size:0.75rem;">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function (d, t) {
+    var g = document.createElement(t), s = d.getElementsByTagName(t)[0];
+    g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+    g.defer = true; g.async = true;
+    s.parentNode.insertBefore(g, s);
+    g.onload = function () {
+      window.vapiSDK.run({
+        apiKey: "5b7a1d64-2061-487a-99ce-d8c600ede18b",
+        assistant: "b06c6629-6896-4ed9-a880-0269f3d96f67",
+        config: {
+          position: "bottom-right",
+          offset: "24px",
+          idle:    { color: "#2EDDB5", type: "pill", title: "Talk to Vivi",   subtitle: "AI Assistant",   icon: "https://unpkg.com/lucide-static@0.321.0/icons/mic.svg" },
+          loading: { color: "#8FDA0D", type: "pill", title: "Connecting...",  subtitle: "Please wait",    icon: "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg" },
+          active:  { color: "#ef4444", type: "pill", title: "End Call",       subtitle: "Tap to hang up", icon: "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg" }
+        }
+      });
+    };
+  })(document, "script");
+</script>
+
+</body>
+</html>
