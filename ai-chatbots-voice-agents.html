@@ -142,6 +142,34 @@
 
     /* Live dot */
     .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #8FDA0D; animation: pulse-dot 1.8s ease-in-out infinite; display: inline-block; }
+
+    /* ── Mobile Responsive ── */
+    @media (max-width: 768px) {
+      /* Hero: reduce padding */
+      .hero-service {
+        padding-top: 5.5rem !important;
+        padding-bottom: 3rem !important;
+        min-height: auto !important;
+      }
+
+      /* Flow diagram branch nodes: 3-col → 1-col */
+      .flow-branches-grid {
+        grid-template-columns: 1fr !important;
+        max-width: 100% !important;
+      }
+
+      /* Resource dropdown */
+      .res-dropdown {
+        width: min(620px, 95vw) !important;
+        right: -1rem !important;
+      }
+
+      /* Buttons */
+      .btn-primary, .btn-ghost { max-width: 100%; }
+
+      /* Images */
+      img { max-width: 100%; height: auto; }
+    }
   </style>
 </head>
 <body>
@@ -208,7 +236,7 @@
 
 
 <!-- ══ HERO ══ -->
-<section style="min-height:85vh; display:flex; align-items:center; padding:9rem 1.5rem 5rem; position:relative; overflow:hidden;
+<section class="hero-service" style="min-height:85vh; display:flex; align-items:center; padding:9rem 1.5rem 5rem; position:relative; overflow:hidden;
   background-color:#060E0E;
   background-image:
     radial-gradient(ellipse 80% 55% at 15% 25%, rgba(46,221,181,0.09) 0%, transparent 60%),
@@ -293,7 +321,7 @@
       <!-- Branching label -->
       <p style="font-family:'Montserrat',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(46,221,181,0.4); margin-bottom:0.75rem;">Routes to best outcome</p>
       <!-- Branch nodes row -->
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6rem; width:100%; max-width:360px;">
+      <div class="flow-branches-grid" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6rem; width:100%; max-width:360px;">
         <div style="padding:0.9rem 0.7rem; border-radius:12px; background:rgba(46,221,181,0.07); border:1px solid rgba(46,221,181,0.18); text-align:center;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2EDDB5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 6px;display:block;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <p style="font-family:'Montserrat',sans-serif; font-size:0.65rem; font-weight:700; color:#2EDDB5; line-height:1.3;">Instant<br>Response</p>

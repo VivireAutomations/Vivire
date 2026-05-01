@@ -352,6 +352,41 @@
     }
     .footer-link:hover { color: #2EDDB5; }
     .footer-link:focus-visible { outline: 2px solid #2EDDB5; outline-offset: 2px; border-radius: 2px; }
+
+    /* ── Mobile Responsive ── */
+    @media (max-width: 768px) {
+      /* Hero: reduce top/bottom padding */
+      .hero-main {
+        padding-top: 5.5rem !important;
+        padding-bottom: 3rem !important;
+      }
+
+      /* Hero feature pills (3-col grid → 1-col) */
+      .hero-pills-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Stats bar: 2-col already, keep it */
+
+      /* Services grid handled by Tailwind md: class */
+
+      /* Testimonials: handled by md:grid-cols-3 Tailwind */
+
+      /* Buttons: ensure they don't overflow */
+      .btn-primary, .btn-ghost {
+        max-width: 100%;
+      }
+
+      /* Images */
+      img { max-width: 100%; height: auto; }
+
+      /* Resource dropdown: prevent viewport overflow */
+      .res-dropdown {
+        width: min(620px, 95vw) !important;
+        right: -1rem !important;
+        left: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -476,7 +511,7 @@
 <!-- ════════════════════════════════════════════
      HERO
 ════════════════════════════════════════════ -->
-<section class="bg-hero" id="top" style="min-height:100vh; display:flex; align-items:center; padding:9rem 1.5rem 6rem; position:relative; overflow:hidden;">
+<section class="bg-hero hero-main" id="top" style="min-height:100vh; display:flex; align-items:center; padding:9rem 1.5rem 6rem; position:relative; overflow:hidden;">
 
   <!-- Ambient orbs -->
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
@@ -568,7 +603,7 @@
       </div>
 
       <!-- RIGHT: Hero visual -->
-      <div style="display:flex; justify-content:center; align-items:center; position:relative; min-height:420px;">
+      <div style="display:flex; justify-content:center; align-items:center; position:relative; min-height:420px; overflow:hidden;">
         <!-- Glow core -->
         <div class="pulse-orb" aria-hidden="true" style="position:absolute; width:360px; height:360px; border-radius:50%; background:radial-gradient(circle, rgba(46,221,181,0.15) 0%, rgba(143,218,13,0.07) 45%, transparent 70%); pointer-events:none;"></div>
         <!-- Outer spinning ring -->
@@ -599,7 +634,7 @@
     </div>
 
     <!-- ── Feature pills row ── -->
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:3.5rem; padding-top:3rem; border-top:1px solid rgba(46,221,181,0.08);">
+    <div class="hero-pills-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:3.5rem; padding-top:3rem; border-top:1px solid rgba(46,221,181,0.08);">
 
       <!-- AI Optimization -->
       <div style="display:flex; flex-direction:column; gap:0.85rem; padding:1.5rem; border-radius:16px; background:rgba(11,56,56,0.28); border:1px solid rgba(46,221,181,0.12); box-shadow:0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(46,221,181,0.06); transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;"

@@ -201,6 +201,36 @@
 
     #mobile-nav { display: none; }
     #mobile-nav.open { display: flex; }
+
+    /* ── Mobile Responsive ── */
+    @media (max-width: 768px) {
+      /* Hero: reduce padding */
+      .hero-pricing {
+        padding-top: 5.5rem !important;
+        padding-bottom: 3rem !important;
+        min-height: auto !important;
+      }
+
+      /* Pricing cards grid: handled by Tailwind lg:grid-cols-3 (defaults to 1 col) */
+
+      /* A-la-carte table: allow horizontal scroll */
+      .alacarte-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Resource dropdown */
+      .res-dropdown {
+        width: min(620px, 95vw) !important;
+        right: -1rem !important;
+      }
+
+      /* Buttons */
+      .btn-primary, .btn-ghost { max-width: 100%; }
+
+      /* Images */
+      img { max-width: 100%; height: auto; }
+    }
   </style>
 </head>
 <body>
@@ -267,7 +297,7 @@
 
 
 <!-- ══ HERO ══ -->
-<section style="min-height:60vh; display:flex; align-items:center; padding:9rem 1.5rem 5rem; position:relative; overflow:hidden; text-align:center;
+<section class="hero-pricing" style="min-height:60vh; display:flex; align-items:center; padding:9rem 1.5rem 5rem; position:relative; overflow:hidden; text-align:center;
   background-color:#060E0E;
   background-image:
     radial-gradient(ellipse 80% 55% at 50% 0%, rgba(46,221,181,0.09) 0%, transparent 60%),
@@ -462,7 +492,7 @@
       </p>
     </div>
 
-    <div style="background:rgba(11,56,56,0.18); border:1px solid rgba(46,221,181,0.1); border-radius:20px; overflow:hidden;">
+    <div class="alacarte-table-wrap" style="background:rgba(11,56,56,0.18); border:1px solid rgba(46,221,181,0.1); border-radius:20px; overflow:hidden;">
       <table class="alacarte-table">
         <thead>
           <tr>

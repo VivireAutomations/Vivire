@@ -197,6 +197,28 @@
     /* Mobile nav open state */
     #mobile-nav { display: none; }
     #mobile-nav.open { display: flex; }
+
+    /* ── Mobile Responsive ── */
+    @media (max-width: 768px) {
+      /* Hero: reduce top/bottom padding */
+      .hero-about {
+        padding-top: 5.5rem !important;
+        padding-bottom: 3rem !important;
+        min-height: auto !important;
+      }
+
+      /* Resource dropdown */
+      .res-dropdown {
+        width: min(620px, 95vw) !important;
+        right: -1rem !important;
+      }
+
+      /* Buttons */
+      .btn-primary, .btn-ghost { max-width: 100%; }
+
+      /* Images */
+      img { max-width: 100%; height: auto; }
+    }
   </style>
 </head>
 <body>
@@ -302,7 +324,7 @@
 <!-- ══════════════════════════════════════════
      HERO — ABOUT US
 ══════════════════════════════════════════ -->
-<section style="min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; padding:9rem 1.5rem 5rem; text-align:center;
+<section class="hero-about" style="min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; padding:9rem 1.5rem 5rem; text-align:center;
   background-color:#060E0E;
   background-image:
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(46,221,181,0.09) 0%, transparent 65%),

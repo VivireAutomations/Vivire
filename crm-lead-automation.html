@@ -131,6 +131,21 @@
 
     #mobile-nav { display: none; }
     #mobile-nav.open { display: flex; }
+
+    /* ── Mobile Responsive ── */
+    @media (max-width: 768px) {
+      .hero-service {
+        padding-top: 5.5rem !important;
+        padding-bottom: 3rem !important;
+        min-height: auto !important;
+      }
+      .res-dropdown {
+        width: min(620px, 95vw) !important;
+        right: -1rem !important;
+      }
+      .btn-primary, .btn-ghost { max-width: 100%; }
+      img { max-width: 100%; height: auto; }
+    }
   </style>
 </head>
 <body>
@@ -197,7 +212,7 @@
 
 
 <!-- ══ HERO ══ -->
-<section style="min-height:85vh; display:flex; align-items:center; padding:9rem 1.5rem 5rem; position:relative; overflow:hidden;
+<section class="hero-service" style="min-height:85vh; display:flex; align-items:center; padding:9rem 1.5rem 5rem; position:relative; overflow:hidden;
   background-color:#060E0E;
   background-image:
     radial-gradient(ellipse 80% 55% at 15% 25%, rgba(143,218,13,0.09) 0%, transparent 60%),

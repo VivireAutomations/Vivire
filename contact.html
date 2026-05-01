@@ -181,6 +181,37 @@
 
     #mobile-nav { display: none; }
     #mobile-nav.open { display: flex; }
+
+    /* ── Mobile Responsive ── */
+    @media (max-width: 768px) {
+      /* Main container: reduce top padding */
+      main > div {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+      }
+
+      /* Form rows: 2-col → 1-col */
+      .form-row-2col {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Budget grid: 2-col → 1-col on very small screens */
+      .budget-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Resource dropdown */
+      .res-dropdown {
+        width: min(620px, 95vw) !important;
+        right: -1rem !important;
+      }
+
+      /* Buttons */
+      .btn-primary, .btn-ghost { max-width: 100%; }
+
+      /* Images */
+      img { max-width: 100%; height: auto; }
+    }
   </style>
 </head>
 <body>
@@ -336,7 +367,7 @@
           <input type="text" name="_honey" style="display:none;" tabindex="-1" autocomplete="off">
 
           <!-- Row 1: First / Last Name -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+          <div class="form-row-2col" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
             <div>
               <label class="form-field-label">First Name</label>
               <input type="text" name="first_name" placeholder="First Name" class="form-input" required>
@@ -348,7 +379,7 @@
           </div>
 
           <!-- Row 2: Email / Company -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+          <div class="form-row-2col" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
             <div>
               <label class="form-field-label">Work Email</label>
               <input type="email" name="email" placeholder="you@company.com" class="form-input" required>
@@ -372,7 +403,7 @@
           </div>
 
           <!-- Row 4: Role / Company Size -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+          <div class="form-row-2col" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
             <div>
               <label class="form-field-label">Your Role</label>
               <select name="role" class="form-input">
