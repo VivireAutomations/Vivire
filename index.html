@@ -360,18 +360,16 @@
       setTimeout(() => {
         overlay.classList.add('active');
         video.play().catch(() => {
-          // Autoplay blocked — redirect anyway
-          window.location.href = 'home.html';
+          window.location.replace('home.html');
         });
       }, 400);
 
       video.addEventListener('ended', () => {
-        window.location.href = 'home.html';
+        window.location.replace('home.html');
       });
 
-      // Safety fallback: if video somehow never fires 'ended'
       video.addEventListener('error', () => {
-        window.location.href = 'home.html';
+        window.location.replace('home.html');
       });
     }
   </script>
