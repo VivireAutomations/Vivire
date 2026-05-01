@@ -612,6 +612,7 @@
     g.defer = true; g.async = true;
     s.parentNode.insertBefore(g, s);
     g.onload = function () {
+      if (window.innerWidth < 768) return;
       window.vapiSDK.run({
         apiKey: "5b7a1d64-2061-487a-99ce-d8c600ede18b",
         assistant: "b06c6629-6896-4ed9-a880-0269f3d96f67",
