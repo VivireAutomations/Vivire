@@ -218,6 +218,33 @@
       .alacarte-table-wrap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+      }
+      .table-scroll-container {
+        position: relative;
+      }
+      .table-scroll-btn {
+        display: none;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        background: rgba(46,221,181,0.15);
+        border: 1px solid rgba(46,221,181,0.3);
+        color: #2EDDB5;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease;
+      }
+      .table-scroll-btn:hover { background: rgba(46,221,181,0.3); }
+      .table-scroll-btn.left { left: -14px; }
+      .table-scroll-btn.right { right: -14px; }
+      @media (max-width: 768px) {
+        .table-scroll-btn { display: flex; }
       }
 
       /* Resource dropdown */
@@ -493,7 +520,14 @@
       </p>
     </div>
 
-    <div class="alacarte-table-wrap" style="background:rgba(11,56,56,0.18); border:1px solid rgba(46,221,181,0.1); border-radius:20px; overflow:hidden;">
+    <div class="table-scroll-container">
+      <button class="table-scroll-btn left" id="scroll-left" aria-label="Scroll left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="table-scroll-btn right" id="scroll-right" aria-label="Scroll right">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="alacarte-table-wrap" id="alacarte-wrap" style="background:rgba(11,56,56,0.18); border:1px solid rgba(46,221,181,0.1); border-radius:20px; overflow:hidden;">
       <table class="alacarte-table">
         <thead>
           <tr>
@@ -542,9 +576,20 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  const wrap = document.getElementById('alacarte-wrap');
+  const btnL = document.getElementById('scroll-left');
+  const btnR = document.getElementById('scroll-right');
+  if (wrap && btnL && btnR) {
+    btnL.addEventListener('click', () => wrap.scrollBy({ left: -180, behavior: 'smooth' }));
+    btnR.addEventListener('click', () => wrap.scrollBy({ left: 180, behavior: 'smooth' }));
+  }
+</script>
 
 
 <!-- ══ FAQ ══ -->
