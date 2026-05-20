@@ -51,7 +51,7 @@
     '#vivi-btn{width:34px;height:34px;background:linear-gradient(135deg,#8FDA0D 0%,#2EDDB5 100%);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s;}',
     '#vivi-btn:hover{transform:scale(1.1);}',
     '#vivi-btn:disabled{opacity:0.42;cursor:default;transform:none;}',
-    '@media(max-width:480px){#vivi-window{width:calc(100vw - 20px);right:10px;bottom:76px;}#vivi-pill{right:10px;bottom:10px;}}'
+    '@media(max-width:600px){#vivi-window{width:calc(100vw - 16px);right:8px;left:8px;bottom:72px;height:calc(100dvh - 90px);max-height:580px;border-radius:16px;}#vivi-pill{right:12px;bottom:12px;}}'
   ].join('');
   document.head.appendChild(styleEl);
 
