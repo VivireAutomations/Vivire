@@ -13,6 +13,7 @@
 
   var isOpen = false;
   var isLoading = false;
+  var history = [];
 
   // ── Styles ──
   var styleEl = document.createElement('style');
@@ -148,6 +149,7 @@
     isLoading = true;
     btnEl.disabled = true;
 
+    history.push({ role: 'user', content: text });
     addMsg(text, 'usr');
     showTyping();
 
@@ -155,12 +157,13 @@
       var res = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, session_id: sessionId })
+        body: JSON.stringify({ messages: history, session_id: sessionId })
       });
       if (!res.ok) throw new Error('non-200');
       var data = await res.json();
       hideTyping();
       var reply = data.reply || data.output || data.message || data.text || "I didn't catch that — try asking again!";
+      history.push({ role: 'assistant', content: reply });
       addMsg(reply, 'bot');
     } catch (_) {
       hideTyping();
