@@ -453,14 +453,14 @@
           Vivi is Vivire's very own AI agent — built to guide every customer through their automation journey from day one. Whether you have questions about our services, need help figuring out where to start, or just want to explore what AI can do for your business, Vivi is here around the clock.
         </p>
         <p style="font-size:1rem; line-height:1.85; color:rgba(232,245,245,0.55); margin-bottom:2rem;">
-          She's a living example of what we build for our clients: an intelligent, always-available voice agent that engages, informs, and converts — without a human in the loop. Talk to her directly using the button in the bottom-right corner of this page.
+          She's a living example of what we build for our clients: an intelligent, always-available AI chat agent that engages, informs, and converts — without a human in the loop. Chat with her directly using the button in the bottom-left corner of this page.
         </p>
 
         <!-- Feature pills -->
         <div style="display:flex; flex-wrap:wrap; gap:0.6rem; margin-bottom:2rem;">
           <span style="display:inline-flex; align-items:center; gap:6px; padding:0.45rem 0.9rem; border-radius:999px; background:rgba(46,221,181,0.07); border:1px solid rgba(46,221,181,0.18); font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:600; color:#2EDDB5;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.85a16 16 0 0 0 6 6l.95-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            Voice AI
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            AI Chat
           </span>
           <span style="display:inline-flex; align-items:center; gap:6px; padding:0.45rem 0.9rem; border-radius:999px; background:rgba(143,218,13,0.07); border:1px solid rgba(143,218,13,0.18); font-family:'Montserrat',sans-serif; font-size:0.75rem; font-weight:600; color:#8FDA0D;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -657,27 +657,6 @@
 </footer>
 
 <script src="https://tally.so/widgets/embed.js"></script>
-<script>
-  (function (d, t) {
-    var g = document.createElement(t), s = d.getElementsByTagName(t)[0];
-    g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-    g.defer = true; g.async = true;
-    s.parentNode.insertBefore(g, s);
-    g.onload = function () {
-      if (window.innerWidth < 768) return;
-      window.vapiSDK.run({
-        apiKey: "5b7a1d64-2061-487a-99ce-d8c600ede18b",
-        assistant: "b06c6629-6896-4ed9-a880-0269f3d96f67",
-        config: {
-          position: "bottom-left",
-          offset: "24px",
-          idle:    { color: "#2EDDB5", type: "pill", title: "Talk to Vivi",   subtitle: "AI Assistant",   icon: "https://unpkg.com/lucide-static@0.321.0/icons/mic.svg" },
-          loading: { color: "#8FDA0D", type: "pill", title: "Connecting...",  subtitle: "Please wait",    icon: "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg" },
-          active:  { color: "#ef4444", type: "pill", title: "End Call",       subtitle: "Tap to hang up", icon: "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg" }
-        }
-      });
-    };
-  })(document, "script");
-</script>
+<script src="vivi-chat-widget.js" defer></script>
 </body>
 </html>

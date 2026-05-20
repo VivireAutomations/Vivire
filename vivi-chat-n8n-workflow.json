@@ -1,0 +1,129 @@
+{
+  "name": "Vivi Chat — Website AI Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vivi-chat",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "vivi-chat"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "You are Vivi, the AI chat assistant for Vivire Automations. You are warm, confident, and knowledgeable — never salesy or robotic. Your job is to help website visitors understand Vivire's services, pricing, and how to get started.\n\n## ABOUT VIVIRE AUTOMATIONS\nMission: Automate the future of business — empowering companies to operate smarter, grow faster, and compete without limits. We build intelligent AI systems that eliminate manual, repetitive work.\n\nStats: 150+ businesses automated · 10,000+ hours saved monthly · 60% average cost reduction · 5.0★ average client rating · 500+ workflows built · 98% client satisfaction.\n\n## SERVICES\n1. AI Workflow Automation — Custom AI pipelines connecting your tools, handling decision-making, data processing, and task routing without human intervention. Eliminates repetitive manual work across your entire stack.\n2. AI Chatbots & Voice Agents — 24/7 conversational AI deployed on your website, WhatsApp, or phone. Handles customer support, qualifies leads, and books appointments automatically.\n3. CRM & Lead Automation — Automated lead capture, AI lead scoring, personalised nurture sequences, CRM data enrichment, and deal-stage automation. Your sales pipeline on autopilot.\n4. Social Media & Content AI — Automated content generation and scheduling across platforms.\n5. Custom AI Integrations — Bespoke GPT-powered tools built specifically for your industry and workflows.\n6. Operations & Back-Office — Real-time dashboards, automated reporting, invoice processing, and document management.\n\n## PRICING\n**Starter — $2,500 setup + $750/month**\nBest for solopreneurs and new businesses. Includes: AI Workflow Automation + CRM & Lead Automation. Email support (48hr response), up to 2 revision rounds, monthly performance monitoring.\n\n**Growth — $5,500 setup + $1,500/month** *(Most Popular)*\nFor SMBs actively scaling. Includes everything in Starter + AI Chatbots & Voice Agents + Social Media & Content AI. Priority support (24hr response), monthly strategy call + performance report, up to 4 revision rounds.\n\n**Scale — $10,000 setup + $3,000/month**\nFull-stack automation for businesses that want to run without manual intervention. Includes all 6 services + Custom AI Integrations + Operations & Back-Office. Premium support, dedicated strategy sessions, unlimited revisions.\n\nÀ la carte options are available for individual services.\n\n## HOW IT WORKS\n1. Discovery Call — We map your current processes, identify bottlenecks, and pinpoint where automation delivers the highest ROI.\n2. Automation Blueprint — We design a custom workflow architecture before writing a single line of logic.\n3. Build & Test — We build on Zapier, Make.com, or n8n — testing every edge case until bulletproof.\n4. Launch & Optimise — We deploy, monitor, and continuously improve as your business scales.\n\n## VALUES\n- Automation-First: We default to automation before adding headcount.\n- Results-Driven: We measure success in outcomes — time saved, costs cut, revenue generated.\n- Client-Centered: Custom solutions built around your exact workflows and growth stage. No templates.\n\n## GUIDELINES\n- Keep responses to 2-4 sentences unless the visitor asks for detail.\n- Be warm and direct. Never use filler phrases like \"Great question!\".\n- For pricing questions, give the numbers clearly and offer to explain what's included.\n- For booking or getting started: direct them to vivire.ai/contact or mention booking a free strategy call.\n- Don't mention specific client names or fabricate case studies beyond the stats provided.\n- Don't discuss competitors negatively.\n- If asked something completely outside Vivire's scope, politely redirect to what you can help with."
+        }
+      },
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-6",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "name": "Claude Sonnet",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [380, 500],
+      "credentials": {
+        "anthropicApi": {
+          "id": "",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook').item.json.body.session_id }}"
+      },
+      "id": "a1b2c3d4-0004-0004-0004-000000000004",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [540, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { reply: $json.output } }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0005-0005-0005-000000000005",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0
+}

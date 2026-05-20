@@ -672,28 +672,7 @@
   </div>
 </footer>
 
-<script>
-  (function (d, t) {
-    var g = document.createElement(t), s = d.getElementsByTagName(t)[0];
-    g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-    g.defer = true; g.async = true;
-    s.parentNode.insertBefore(g, s);
-    g.onload = function () {
-      if (window.innerWidth < 768) return;
-      window.vapiSDK.run({
-        apiKey: "5b7a1d64-2061-487a-99ce-d8c600ede18b",
-        assistant: "b06c6629-6896-4ed9-a880-0269f3d96f67",
-        config: {
-          position: "bottom-left",
-          offset: "24px",
-          idle:    { color: "#2EDDB5", type: "pill", title: "Talk to Vivi",   subtitle: "AI Assistant",   icon: "https://unpkg.com/lucide-static@0.321.0/icons/mic.svg" },
-          loading: { color: "#8FDA0D", type: "pill", title: "Connecting...",  subtitle: "Please wait",    icon: "https://unpkg.com/lucide-static@0.321.0/icons/loader-2.svg" },
-          active:  { color: "#ef4444", type: "pill", title: "End Call",       subtitle: "Tap to hang up", icon: "https://unpkg.com/lucide-static@0.321.0/icons/phone-off.svg" }
-        }
-      });
-    };
-  })(document, "script");
-</script>
+<script src="vivi-chat-widget.js" defer></script>
 
 </body>
 </html>
